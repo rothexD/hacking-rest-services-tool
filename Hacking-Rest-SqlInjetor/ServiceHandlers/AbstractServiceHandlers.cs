@@ -6,6 +6,7 @@ using System.Net;
 using Hacking_Rest_SqlInjetor.DatabaseInformations;
 using System.Text.RegularExpressions;
 using Hacking_Rest_SqlInjetor.FormDatas;
+using Hacking_Rest_SqlInjetor.WebClient;
 
 namespace Hacking_Rest_SqlInjetor.ServiceHandlers
 {
@@ -14,15 +15,14 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers
         public AbstractServiceHandler(){
 
         }
-        abstract public void StartAttack(string targetUri);
+        abstract public void StartAttack(string targetUri,ICustomHttpClient Client);
 
         public List<FormData> GetFormDataIntoDatabaseInformation(HtmlAgilityPack.HtmlDocument Document,string uri)
         {
-            Console.WriteLine(Document.Text);
-            Console.WriteLine();
-            Console.WriteLine();
+            //Console.WriteLine(Document.Text);
+            
             List<FormData> listOfFormData = new List<FormData>();            
-            var form = Document.DocumentNode.SelectNodes("form");
+            var form = Document.DocumentNode.Descendants("form");
             
             foreach(var dataFormField in form)
             {
@@ -81,6 +81,7 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers
                     {
                         singleInput.Value = null;
                     }
+                    Console.WriteLine($"{singleInput.Type},{singleInput.Id},{singleInput.Name},{singleInput.Value}\r\n");
 
                     formData.InputFields.Add(singleInput);
                                      

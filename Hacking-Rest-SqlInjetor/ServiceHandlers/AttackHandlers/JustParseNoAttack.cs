@@ -7,6 +7,7 @@ using Hacking_Rest_SqlInjetor.DatabaseInformations;
 using System.Text.RegularExpressions;
 using Hacking_Rest_SqlInjetor.FormDatas;
 using Hacking_Rest_SqlInjetor.ServiceHandlers;
+using Hacking_Rest_SqlInjetor.WebClient;
 
 namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
 {
@@ -17,7 +18,7 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
         {
             this.Client = client;
         }
-        override public void StartAttack(string targetUri)
+        override public void StartAttack(string targetUri, ICustomHttpClient Client)
         {
         }
     }
