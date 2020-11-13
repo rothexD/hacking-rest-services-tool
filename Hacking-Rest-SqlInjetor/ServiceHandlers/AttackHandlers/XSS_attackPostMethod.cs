@@ -19,17 +19,6 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
         }
         override public void StartAttack(string targetUri)
         {
-            customclient = new customclient;
-            data = customclient.GetAsync(Uri)
-            var document = new httmldocument;
-            document.parsebystring(data.payload)
-
-            LOGIK
-
-            httprequest request = new reatuest;
-            request.add(key, value);
-            request.Uri =
-            Client.sendGet(request);
         }
     }
 }

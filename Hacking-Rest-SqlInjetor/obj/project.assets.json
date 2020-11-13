@@ -69,26 +69,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\rothexD\\.nuget\\packages\\": {}
+    "/home/samuel/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rothexD\\Documents\\GitHub\\hacking-rest-sqlinjectior\\Hacking-Rest-SqlInjetor\\Hacking-Rest-SqlInjetor.csproj",
+      "projectUniqueName": "/home/samuel/RiderProjects/hacking-rest-sqlinjectior/Hacking-Rest-SqlInjetor/Hacking-Rest-SqlInjetor.csproj",
       "projectName": "Hacking-Rest-SqlInjetor",
-      "projectPath": "C:\\Users\\rothexD\\Documents\\GitHub\\hacking-rest-sqlinjectior\\Hacking-Rest-SqlInjetor\\Hacking-Rest-SqlInjetor.csproj",
-      "packagesPath": "C:\\Users\\rothexD\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rothexD\\Documents\\GitHub\\hacking-rest-sqlinjectior\\Hacking-Rest-SqlInjetor\\obj\\",
+      "projectPath": "/home/samuel/RiderProjects/hacking-rest-sqlinjectior/Hacking-Rest-SqlInjetor/Hacking-Rest-SqlInjetor.csproj",
+      "packagesPath": "/home/samuel/.nuget/packages/",
+      "outputPath": "/home/samuel/RiderProjects/hacking-rest-sqlinjectior/Hacking-Rest-SqlInjetor/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\rothexD\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/samuel/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -125,7 +123,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.403/RuntimeIdentifierGraph.json"
       }
     }
   }
