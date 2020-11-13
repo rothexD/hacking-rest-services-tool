@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "Hacking-Rest-SqlInjetor/1.0.0": {
+        "runtime": {
+          "Hacking-Rest-SqlInjetor.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Hacking-Rest-SqlInjetor/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

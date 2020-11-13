@@ -1,0 +1,11 @@
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.csprojAssemblyReference.cache
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.AssemblyInfoInputs.cache
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.AssemblyInfo.cs
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.exe
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.deps.json
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.runtimeconfig.json
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.runtimeconfig.dev.json
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.dll
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.pdb
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.dll
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.pdb
