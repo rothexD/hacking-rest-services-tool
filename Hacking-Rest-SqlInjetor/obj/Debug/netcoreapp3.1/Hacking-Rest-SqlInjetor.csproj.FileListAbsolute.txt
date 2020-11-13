@@ -9,3 +9,5 @@ C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInje
 C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.pdb
 C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.dll
 C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.pdb
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\bin\Debug\netcoreapp3.1\HtmlAgilityPack.dll
+C:\Users\rothexD\Documents\GitHub\hacking-rest-sqlinjectior\Hacking-Rest-SqlInjetor\obj\Debug\netcoreapp3.1\Hacking-Rest-SqlInjetor.csproj.CopyComplete
