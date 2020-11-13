@@ -8,7 +8,7 @@ namespace Hacking_Rest_SqlInjetor.WebClient
 {
     public class HttpContext : AbstractHttpContext
     {
-        private readonly List<KeyValuePair<string, string>> _fields;
+        private  List<KeyValuePair<string, string>> _fields;
 
         public HttpContext()
         {
@@ -58,10 +58,13 @@ namespace Hacking_Rest_SqlInjetor.WebClient
 
         private void RemoveFieldsWithName(string name)
         {
-            var duplicates = _fields.Where(field => field.Key == name);
-            foreach (var field in duplicates)
+            var myFields = new List<KeyValuePair<string, string>>(_fields);
+            foreach (var field in myFields)
             {
-                _fields.Remove(field);
+                if (field.Key == name)
+                {
+                    _fields.Remove(field);
+                }
             }
         }
     }
