@@ -1,0 +1,206 @@
+Key: crawlDepth :: Value: 
+Key: osShell    :: Value: False
+Key: getUsers   :: Value: False
+Key: getPasswordHashes  :: Value: False
+Key: excludeSysDbs      :: Value: False
+Key: ignoreTimeouts     :: Value: False
+Key: regData    :: Value: 
+Key: paramFilter        :: Value: 
+Key: fileDest   :: Value: 
+Key: prefix     :: Value: 
+Key: code       :: Value: 
+Key: googlePage :: Value: 1
+Key: skip       :: Value: 
+Key: randomAgent        :: Value: False
+Key: osPwn      :: Value: False
+Key: authType   :: Value: 
+Key: safeUrl    :: Value: 
+Key: requestFile        :: Value: 
+Key: predictOutput      :: Value: False
+Key: wizard     :: Value: False
+Key: forms      :: Value: False
+Key: uChar      :: Value: 
+Key: csrfRetries        :: Value: 0
+Key: secondReq  :: Value: 
+Key: taskid     :: Value: 9ac2bb279025296f
+Key: pivotColumn        :: Value: 
+Key: preprocess :: Value: 
+Key: dropSetCookie      :: Value: False
+Key: base64Safe :: Value: False
+Key: smart      :: Value: False
+Key: paramExclude       :: Value: 
+Key: risk       :: Value: 1
+Key: sqlFile    :: Value: 
+Key: rParam     :: Value: 
+Key: getCurrentUser     :: Value: False
+Key: base64Parameter    :: Value: 
+Key: getRoles   :: Value: False
+Key: getPrivileges      :: Value: False
+Key: csrfMethod :: Value: 
+Key: testParameter      :: Value: 
+Key: tbl        :: Value: 
+Key: charset    :: Value: 
+Key: trafficFile        :: Value: 
+Key: osSmb      :: Value: False
+Key: level      :: Value: 1
+Key: dnsDomain  :: Value: 
+Key: outputDir  :: Value: 
+Key: encoding   :: Value: 
+Key: skipWaf    :: Value: False
+Key: unstable   :: Value: False
+Key: timeout    :: Value: 30
+Key: firstChar  :: Value: 
+Key: updateAll  :: Value: False
+Key: getComments        :: Value: False
+Key: binaryFields       :: Value: 
+Key: checkTor   :: Value: False
+Key: commonTables       :: Value: False
+Key: direct     :: Value: 
+Key: tmpPath    :: Value: 
+Key: titles     :: Value: False
+Key: getSchema  :: Value: False
+Key: timeSec    :: Value: 5
+Key: paramDel   :: Value: 
+Key: safeReqFile        :: Value: 
+Key: regKey     :: Value: 
+Key: murphyRate :: Value: 
+Key: headers    :: Value: 
+Key: crawlExclude       :: Value: 
+Key: flushSession       :: Value: False
+Key: loadCookies        :: Value: 
+Key: csvDel     :: Value: ,
+Key: offline    :: Value: False
+Key: method     :: Value: 
+Key: tmpDir     :: Value: 
+Key: limitStart :: Value: 
+Key: fileWrite  :: Value: 
+Key: disablePrecon      :: Value: False
+Key: osBof      :: Value: False
+Key: testSkip   :: Value: 
+Key: invalidLogical     :: Value: False
+Key: getCurrentDb       :: Value: False
+Key: hexConvert :: Value: False
+Key: proxyFile  :: Value: 
+Key: answers    :: Value: 
+Key: host       :: Value: 
+Key: dependencies       :: Value: False
+Key: cookie     :: Value: security_level=0; PHPSESSID=ol8tknn5midgnp2unlaf90pbu5
+Key: proxy      :: Value: 
+Key: regType    :: Value: 
+Key: repair     :: Value: False
+Key: optimize   :: Value: False
+Key: limitStop  :: Value: 
+Key: search     :: Value: False
+Key: shLib      :: Value: 
+Key: uFrom      :: Value: 
+Key: noCast     :: Value: False
+Key: testFilter :: Value: 
+Key: ignoreCode :: Value: 
+Key: eta        :: Value: False
+Key: csrfToken  :: Value: 
+Key: threads    :: Value: 1
+Key: logFile    :: Value: 
+Key: os :: Value: 
+Key: col        :: Value: 
+Key: skipStatic :: Value: False
+Key: proxyCred  :: Value: 
+Key: resultsFile        :: Value: 
+Key: verbose    :: Value: 1
+Key: isDba      :: Value: False
+Key: torPort    :: Value: 
+Key: privEsc    :: Value: False
+Key: forceDns   :: Value: False
+Key: getAll     :: Value: False
+Key: api        :: Value: True
+Key: invalidBignum      :: Value: False
+Key: regexp     :: Value: 
+Key: getDbs     :: Value: False
+Key: freshQueries       :: Value: False
+Key: uCols      :: Value: 
+Key: smokeTest  :: Value: False
+Key: udfInject  :: Value: False
+Key: invalidString      :: Value: False
+Key: tor        :: Value: False
+Key: forceSSL   :: Value: False
+Key: notString  :: Value: 
+Key: beep       :: Value: False
+Key: noEscape   :: Value: False
+Key: configFile :: Value: 
+Key: postprocess        :: Value: 
+Key: scope      :: Value: 
+Key: authFile   :: Value: 
+Key: torType    :: Value: SOCKS5
+Key: regVal     :: Value: 
+Key: dummy      :: Value: False
+Key: checkInternet      :: Value: False
+Key: safePost   :: Value: 
+Key: safeFreq   :: Value: 
+Key: technique  :: Value: BEUSTQ
+Key: skipUrlEncode      :: Value: False
+Key: referer    :: Value: 
+Key: skipHeuristics     :: Value: False
+Key: retries    :: Value: 3
+Key: extensiveFp        :: Value: False
+Key: dumpTable  :: Value: False
+Key: getColumns :: Value: False
+Key: batch      :: Value: True
+Key: purge      :: Value: False
+Key: url        :: Value: localhost/sqli_1.php?title=1
+Key: authCred   :: Value: 
+Key: osCmd      :: Value: 
+Key: suffix     :: Value: 
+Key: dbmsCred   :: Value: 
+Key: regDel     :: Value: False
+Key: chunked    :: Value: False
+Key: nullConnection     :: Value: False
+Key: msfPath    :: Value: 
+Key: dumpAll    :: Value: False
+Key: fileRead   :: Value: 
+Key: getHostname        :: Value: False
+Key: sessionFile        :: Value: 
+Key: disableColoring    :: Value: True
+Key: getTables  :: Value: False
+Key: listTampers        :: Value: False
+Key: agent      :: Value: 
+Key: webRoot    :: Value: 
+Key: exclude    :: Value: 
+Key: lastChar   :: Value: 
+Key: string     :: Value: 
+Key: dbms       :: Value: 
+Key: dumpWhere  :: Value: 
+Key: commonFiles        :: Value: False
+Key: tamper     :: Value: 
+Key: ignoreRedirects    :: Value: False
+Key: hpp        :: Value: False
+Key: delay      :: Value: 0
+Key: evalCode   :: Value: 
+Key: cleanup    :: Value: False
+Key: csrfUrl    :: Value: 
+Key: secondUrl  :: Value: 
+Key: getBanner  :: Value: False
+Key: profile    :: Value: False
+Key: regRead    :: Value: False
+Key: bulkFile   :: Value: 
+Key: db :: Value: 
+Key: dumpFormat :: Value: CSV
+Key: alert      :: Value: 
+Key: harFile    :: Value: 
+Key: liveCookies        :: Value: 
+Key: user       :: Value: 
+Key: parseErrors        :: Value: False
+Key: getCount   :: Value: False
+Key: data       :: Value: 
+Key: regAdd     :: Value: False
+Key: ignoreProxy        :: Value: False
+Key: database   :: Value: /tmp/sqlmapipc-PQZd6Q
+Key: mobile     :: Value: False
+Key: googleDork :: Value: 
+Key: getStatements      :: Value: False
+Key: saveConfig :: Value: 
+Key: sqlQuery   :: Value: 
+Key: sqlShell   :: Value: False
+Key: textOnly   :: Value: False
+Key: cookieDel  :: Value: 
+Key: commonColumns      :: Value: False
+Key: keepAlive  :: Value: False
+
