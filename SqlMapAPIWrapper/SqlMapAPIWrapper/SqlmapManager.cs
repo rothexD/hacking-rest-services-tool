@@ -69,7 +69,46 @@ namespace SqlMapAPIWrapper
                 i.Time = (string) item["time"];
                 logItems.Add(i);
             }
+
             return logItems;
+        }
+
+        public SqlmapData GetData(string taskid)
+        {
+            string json = _session.ExecuteGet("/scan/" + taskid + "/data");
+            JObject tok = JObject.Parse(json);
+            JArray items = tok["data"] as JArray;
+            SqlmapData data = new SqlmapData();
+            foreach (var item in items)
+            {
+                SqlmapDataItem i = new SqlmapDataItem();
+                i.Status = (int) item["status"];
+                i.Type = (int) item["type"];
+
+                switch (i.Type)
+                {
+                    case 0:
+                        i.Value = (object) item["value"] as JObject;
+                        i.IsJObject = true;
+                        break;
+                    case 2:
+                    case 3:
+                        i.Value = item["value"]?.ToString();
+                        i.IsJObject = true;
+                        break;
+                    default:
+                        i.Value = (object) item["value"] as JArray;
+                        break;
+                }
+
+                data.Data.Add(i);
+            }
+
+            data.Success = (bool) tok["success"];
+
+            if (data.Data.Count < 1)
+                return null;
+            return data;
         }
 
 

