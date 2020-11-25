@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace SqlMapAPIWrapper
+namespace SqlMapAPIWrapperLib
 {
     public class SqlmapSession : IDisposable
     {
@@ -20,7 +20,9 @@ namespace SqlMapAPIWrapper
             req.Method = "GET";
             string resp = string.Empty;
             using (StreamReader rdr = new StreamReader(req.GetResponse().GetResponseStream()))
+            {
                 resp = rdr.ReadToEnd();
+            }
             return resp;
         }
         public string ExecutePost(string url, string data)
@@ -34,7 +36,9 @@ namespace SqlMapAPIWrapper
                 stream.Write(buffer, 0, buffer.Length);
             string resp = string.Empty;
             using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream()))
+            {
                 resp = r.ReadToEnd();
+            }
             return resp;
 
         }

@@ -1,4 +1,4 @@
-﻿namespace SqlMapAPIWrapper.Entity
+﻿namespace SqlMapAPIWrapperLib.Entity
 {
     public class SqlmapStatus
     {

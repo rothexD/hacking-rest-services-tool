@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SqlMapAPIWrapper.Entity
+namespace SqlMapAPIWrapperLib.Entity
 {
     public class SqlmapData
     {

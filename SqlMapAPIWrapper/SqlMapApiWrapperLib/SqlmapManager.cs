@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SqlMapAPIWrapper.Entity;
+using SqlMapAPIWrapperLib.Entity;
 
-namespace SqlMapAPIWrapper
+
+namespace SqlMapAPIWrapperLib
 {
     public class SqlmapManager : IDisposable
     {
@@ -89,12 +90,12 @@ namespace SqlMapAPIWrapper
                 {
                     case 0:
                         i.Value = (object) item["value"] as JObject;
-                        i.IsJObject = true;
+                        i.JsonReturnType = JsonReturnType.Object;
                         break;
                     case 2:
                     case 3:
                         i.Value = item["value"]?.ToString();
-                        i.IsJObject = true;
+                        i.JsonReturnType = JsonReturnType.String;
                         break;
                     default:
                         i.Value = (object) item["value"] as JArray;
