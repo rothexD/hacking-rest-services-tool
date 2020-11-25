@@ -15,6 +15,6 @@ namespace Hacking_Rest_SqlInjetor.WebClient
 
         public abstract void AddField(string name, string value);
 
-        public abstract void BuildRequest();
+        public abstract AbstractHttpContext BuildRequest();
     }
 }
