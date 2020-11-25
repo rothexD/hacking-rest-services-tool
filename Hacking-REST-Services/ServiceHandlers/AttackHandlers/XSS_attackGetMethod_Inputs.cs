@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using Hacking_Rest_SqlInjetor.Form;
 using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Helpers;
 
 namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
 {
@@ -11,10 +12,11 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
     {
         public override void StartAttack(string targetUri, ICustomHttpClient client)
         {
+            Console.WriteLine($"cookiecount: {client.ClientHandler.CookieContainer.Count}");
             var openSite = client.Get(targetUri);
             var document = CustomHttpClient.GetHtmlDocument(openSite);
             var formsOfHtmlDocument = GetFormsOfHtmlDocument(document, targetUri);
-            
+
             foreach(var form in formsOfHtmlDocument)
             {
                 if (form.Method != "GET")

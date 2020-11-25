@@ -1,16 +1,25 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using System.Net;
 
 namespace Hacking_Rest_SqlInjetor.WebClient
 {
     public class CustomHttpClient : ICustomHttpClient
     {
         private readonly HttpClient _client;
+        public HttpClientHandler ClientHandler { get; private set; }
 
         public CustomHttpClient()
         {
-            _client = new HttpClient();
+            ClientHandler = new HttpClientHandler()
+            {
+                AllowAutoRedirect = false,
+                UseCookies = true,
+                CookieContainer = new CookieContainer()              
+            };
+
+            _client = new HttpClient(ClientHandler);
         }
 
         public CustomHttpClient(HttpClient client)
@@ -20,18 +29,28 @@ namespace Hacking_Rest_SqlInjetor.WebClient
 
         public Task<HttpResponseMessage> Get(string uri)
         {
-            return _client.GetAsync(uri);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
+            return _client.SendAsync(request);
         }
 
         public Task<HttpResponseMessage> Get(AbstractHttpContext request)
         {
-            string uri = request.RequestUri.ToString();
-            return _client.GetAsync(uri);
+            string cookie = "";
+            return _client.SendAsync(request);
         }
-
         public Task<HttpResponseMessage> Post(AbstractHttpContext request)
         {
+            string cookie = "";
             return _client.SendAsync(request);
+        }
+
+        public Task<HttpResponseMessage> ByContextMethod(AbstractHttpContext request)
+        {
+            if(request.Method == HttpMethod.Post)
+            {
+                return Post(request);
+            }
+            return Get(request);
         }
 
         public static string GetResponseContent(Task<HttpResponseMessage> response)

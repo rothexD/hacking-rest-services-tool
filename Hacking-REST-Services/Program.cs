@@ -3,17 +3,22 @@ using System.Net.Http;
 using Hacking_Rest_SqlInjetor.ServiceHandlers;
 using Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers;
 using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Helpers;
+using Hacking_Rest_SqlInjetor.Form;
 
 namespace Hacking_Rest_SqlInjetor
 {
     internal static class Program
     {
+        
+
         private static void Main(string[] args)
         {
-            const string loginPage = "http://localhost:55001/login.php";
-            const string xssPage = "http://localhost:55001/xss_get.php";
-
+            const string loginPage = "http://127.0.0.1:55001/login.php";
+            const string xssPage = "http://127.0.0.1:55001/xss_get.php";
+            ICustomHttpClient Client = new CustomHttpClient();
             // login to bWAPP
+            /*
             var request = new HttpContext
             {
                 RequestUri = new Uri(loginPage),
@@ -25,13 +30,14 @@ namespace Hacking_Rest_SqlInjetor
             request.AddField("security_level", "0");
             request.AddField("form", "submit");
             request.BuildRequest();
+            Client.Post(request).Wait();
+            */
+            var login = new LoginHelper();
+            login.tryLogin(Client);
 
-            ICustomHttpClient client = new CustomHttpClient();
-            client.Post(request).Wait();
-            
-            // perform attack
+            //perform attack
             AbstractServiceHandler service = new XssAttackGetMethodInputs();
-            service.StartAttack(xssPage, client);
+            service.StartAttack(xssPage, Client);
             Console.Read();
         }
     }
