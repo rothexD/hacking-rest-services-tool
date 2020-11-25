@@ -10,8 +10,8 @@ namespace Hacking_Rest_SqlInjetor
     {
         private static void Main(string[] args)
         {
-            const string loginPage = "http://localhost:40201/login.php";
-            const string xssPage = "http://localhost:40201/xss_get.php";
+            const string loginPage = "http://localhost:55001/login.php";
+            const string xssPage = "http://localhost:55001/xss_get.php";
 
             // login to bWAPP
             var request = new HttpContext
