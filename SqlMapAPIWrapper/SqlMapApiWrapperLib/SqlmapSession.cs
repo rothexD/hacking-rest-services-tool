@@ -17,12 +17,19 @@ namespace SqlMapAPIWrapperLib
         public string ExecuteGet(string url)
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + _host + ":" + _port + url);
+            Console.WriteLine(url);
             req.Method = "GET";
             string resp = string.Empty;
-            using (StreamReader rdr = new StreamReader(req.GetResponse().GetResponseStream()))
+            var stream = req.GetResponse().GetResponseStream();
+            
+            if (stream == null)
+                return resp;
+            
+            using (StreamReader rdr = new StreamReader(stream))
             {
                 resp = rdr.ReadToEnd();
             }
+            stream.Close();
             return resp;
         }
         public string ExecutePost(string url, string data)
@@ -35,10 +42,16 @@ namespace SqlMapAPIWrapperLib
             using (Stream stream = req.GetRequestStream())
                 stream.Write(buffer, 0, buffer.Length);
             string resp = string.Empty;
-            using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream()))
+            var respStream = req.GetResponse().GetResponseStream();
+
+            if (respStream == null)
+                return resp;
+            
+            using (StreamReader r = new StreamReader(respStream))
             {
                 resp = r.ReadToEnd();
             }
+            respStream.Close();
             return resp;
 
         }

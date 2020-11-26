@@ -89,6 +89,9 @@ namespace SqlMapAPIWrapperLib
                 switch (i.Type)
                 {
                     case 0:
+                    case 13:
+                    case 17:
+                    case 9:
                         i.Value = (object) item["value"] as JObject;
                         i.JsonReturnType = JsonReturnType.Object;
                         break;
