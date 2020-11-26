@@ -20,38 +20,38 @@ namespace SqlMapAPIWrapperLib
             Console.WriteLine(url);
             req.Method = "GET";
             string resp = string.Empty;
-            var stream = req.GetResponse().GetResponseStream();
-            
-            if (stream == null)
-                return resp;
-            
-            using (StreamReader rdr = new StreamReader(stream))
+            using (Stream stream = req.GetResponse().GetResponseStream())
             {
-                resp = rdr.ReadToEnd();
+                using (StreamReader rdr = new StreamReader(stream))
+                {
+                    resp = rdr.ReadToEnd();
+                }
             }
-            stream.Close();
             return resp;
         }
         public string ExecutePost(string url, string data)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://"+_host+":"+_port+url);
+
             req.Method = "POST";
             req.ContentType = "application/json";
             req.ContentLength = buffer.Length;
-            using (Stream stream = req.GetRequestStream())
-                stream.Write(buffer, 0, buffer.Length);
-            string resp = string.Empty;
-            var respStream = req.GetResponse().GetResponseStream();
 
-            if (respStream == null)
-                return resp;
-            
-            using (StreamReader r = new StreamReader(respStream))
+            using (Stream stream = req.GetRequestStream())
             {
-                resp = r.ReadToEnd();
+                stream.Write(buffer, 0, buffer.Length);
             }
-            respStream.Close();
+
+            string resp = string.Empty;
+
+            using (Stream stream = req.GetResponse().GetResponseStream())
+            {
+                using (StreamReader rdr = new StreamReader(stream))
+                {
+                    resp = rdr.ReadToEnd();
+                }
+            }
             return resp;
 
         }
