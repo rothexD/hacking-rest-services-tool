@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -29,7 +30,7 @@ Sec-Fetch-Dest: document
 Referer: http://localhost/sqli_6.php
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
-Cookie: security_level=0; PHPSESSID=tvhvmktm8rndsdcpqoi6aegu12
+Cookie: security_level=0; PHPSESSID=mr1i4bgjfv6lk5o82arnndjk22
 Connection: close
 
 title=test&action=search";
@@ -50,47 +51,65 @@ Sec-Fetch-Dest: document
 Referer: http://localhost/sqli_6.php
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
-Cookie: security_level=0; PHPSESSID=tvhvmktm8rndsdcpqoi6aegu12
+Cookie: security_level=0; PHPSESSID=mr1i4bgjfv6lk5o82arnndjk22
 Connection: close
 ";
 
-            /* SqlMapApiWrapper wrapper = new SqlMapApiWrapper("127.0.0.1",8775);
-             string targetUrl = "http://localhost/sqli_1.php?title=test";
-             string targetUrlNotWorking = "http://localhost/sqli_1.php";
-             string sessionCookie = "security_level=0; PHPSESSID=tvhvmktm8rndsdcpqoi6aegu12";
-             string db = "bWAPP";
-             string table = "users";
-             bool injectable = wrapper.IsSqlinjectable(targetUrl,sessionCookie);
-             bool injectable2 = wrapper.IsSqlinjectable(data);
-             //bool injectable3 = wrapper.IsSqlinjectable(targetUrlNotWorking,sessionCookie);
-             //bool injectable4 = wrapper.IsSqlinjectable(dataNotWorking);
-             var dbs = wrapper.GetDatabases(targetUrl, sessionCookie);
-             var dbs2 = wrapper.GetDatabases(data);
-              var dbs3 = wrapper.GetDatabases(targetUrlNotWorking, sessionCookie);
-              var dbs4 = wrapper.GetDatabases(dataNotWorking);
-              var tables = wrapper.GetDatabaseTables(targetUrl, sessionCookie, db);
-              var tables2 = wrapper.GetDatabaseTables(data,db);
-              var tables3 = wrapper.GetDatabaseTables(targetUrlNotWorking, sessionCookie, db);
-              var tables4 = wrapper.GetDatabaseTables(dataNotWorking,db);
-              var tableContent = wrapper.GetTableContentFromDatabase(targetUrl, sessionCookie, table, db);
-              var tableContent2 = wrapper.GetTableContentFromDatabase(data, table, db);
-              var tableContent3 = wrapper.GetTableContentFromDatabase(targetUrlNotWorking, sessionCookie, table, db);
-              var tableContent4 = wrapper.GetTableContentFromDatabase(dataNotWorking, table, db);
-              var dbType = wrapper.GetDatabaseType(targetUrl, sessionCookie);
-              var dbType2 = wrapper.GetDatabaseType(data);
-              var dbType3 = wrapper.GetDatabaseType(targetUrlNotWorking, sessionCookie);
-              var dbType4 = wrapper.GetDatabaseType(dataNotWorking);
-              var passwords = wrapper.GetDatabasePasswords(targetUrl, sessionCookie);
-              var passwords2 = wrapper.GetDatabasePasswords(data);
-              var passwords3 = wrapper.GetDatabasePasswords(targetUrlNotWorking, sessionCookie);
-              var passwords4 = wrapper.GetDatabasePasswords(dataNotWorking); 
-              
-                          bool working = false;
-                          
-                          if (injectable && injectable2 && dbs.Equals(dbs2))
-                              working = true;
-                          
-                          Console.WriteLine($"Working: {working}");*/
+            SqlMapApiWrapper wrapper = new SqlMapApiWrapper("127.0.0.1", 8775);
+            string targetUrl = "http://localhost/sqli_1.php?title=test";
+            string targetUrlNotWorking = "http://localhost/sqli_1.php";
+            string sessionCookie = "security_level=0; PHPSESSID=mr1i4bgjfv6lk5o82arnndjk22";
+            string db = "bWAPP";
+            string table = "users";
+            bool injectable = wrapper.IsSqlinjectable(targetUrl, sessionCookie);
+            bool injectable2 = wrapper.IsSqlinjectable(data);
+            bool injectable3 = wrapper.IsSqlinjectable(targetUrlNotWorking,sessionCookie);
+            bool injectable4 = wrapper.IsSqlinjectable(dataNotWorking);
+            var dbs = wrapper.GetDatabases(targetUrl, sessionCookie);
+            var dbs2 = wrapper.GetDatabases(data);
+            var dbs3 = wrapper.GetDatabases(targetUrlNotWorking, sessionCookie);
+            var dbs4 = wrapper.GetDatabases(dataNotWorking);
+            var tables = wrapper.GetDatabaseTables(targetUrl, sessionCookie, db);
+            var tables2 = wrapper.GetDatabaseTables(data, db);
+            var tables3 = wrapper.GetDatabaseTables(targetUrlNotWorking, sessionCookie, db);
+            var tables4 = wrapper.GetDatabaseTables(dataNotWorking, db);
+            var tableContent = wrapper.GetTableContentFromDatabase(targetUrl, sessionCookie, table, db);
+            var tableContent2 = wrapper.GetTableContentFromDatabase(data, table, db);
+            var tableContent3 = wrapper.GetTableContentFromDatabase(targetUrlNotWorking, sessionCookie, table, db);
+            var tableContent4 = wrapper.GetTableContentFromDatabase(dataNotWorking, table, db);
+            var dbType = wrapper.GetDatabaseType(targetUrl, sessionCookie);
+            var dbType2 = wrapper.GetDatabaseType(data);
+            var dbType3 = wrapper.GetDatabaseType(targetUrlNotWorking, sessionCookie);
+            var dbType4 = wrapper.GetDatabaseType(dataNotWorking);
+            var passwords = wrapper.GetDatabasePasswords(targetUrl, sessionCookie);
+            var passwords2 = wrapper.GetDatabasePasswords(data);
+            var passwords3 = wrapper.GetDatabasePasswords(targetUrlNotWorking, sessionCookie);
+            var passwords4 = wrapper.GetDatabasePasswords(dataNotWorking);
+
+            bool working = false;
+
+            bool binjectable = injectable && injectable2;
+            bool bdbs = dbs.SequenceEqual(dbs2);
+            tables.Sort();
+            tables2.Sort();
+            bool btables = tables.SequenceEqual(tables2);
+            bool btableContent = tableContent.Count == tableContent2.Count;
+            bool bdbType = dbType.name == dbType2.name;
+            bool bpasswords = passwords.SequenceEqual(passwords2); 
+            
+            bool binjectable2 = !(injectable3 && injectable4);
+            bool bdbs2 = dbs3 == dbs4;
+            bool btables2 = tables3 == tables4;
+            bool btableContent2 = tableContent3 == tableContent4;
+            bool bdbType2 = dbType3 == dbType4;
+            bool bpasswords2 = passwords3 == passwords4;
+            
+            if ( binjectable && bdbs  &&  btables && btableContent && bdbType && bpasswords
+                && binjectable2 && bdbs2  &&  btables2 && btableContent2 && bdbType2 && bpasswords2)
+                working = true;
+
+            Console.WriteLine($"Working: {working}");
+            /*
             int i = 0;
             while (true)
             {
@@ -116,7 +135,7 @@ Connection: close
                     Console.WriteLine(i);
                     throw ;
                 }
-            }
+            } */
         }
     }
 }

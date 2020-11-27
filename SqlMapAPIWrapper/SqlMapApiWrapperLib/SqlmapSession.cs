@@ -17,7 +17,7 @@ namespace SqlMapAPIWrapperLib
         public string ExecuteGet(string url)
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + _host + ":" + _port + url);
-            Console.WriteLine(url);
+            //Console.WriteLine(url);
             req.Method = "GET";
             string resp = string.Empty;
             using (Stream stream = req.GetResponse().GetResponseStream())
