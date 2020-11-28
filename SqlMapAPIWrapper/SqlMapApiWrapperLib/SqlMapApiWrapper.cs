@@ -1,27 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SqlMapAPIWrapperLib.Entity;
 
 namespace SqlMapAPIWrapperLib
 {
-    public class SqlMapApiWrapper
+    public class SqlMapApiWrapper 
     {
+        
         private string _host;
         private int _port;
-        private TimeSpan waitingTime = new TimeSpan(0, 0, 1);
+        private TimeSpan waitingTime = new TimeSpan(0, 0, 3);
 
-        public SqlMapApiWrapper(string SqlMapApiAdress, int port = 8775)
+        public SqlMapApiWrapper(string sqlMapApiAddress, int port = 8775)
         {
-            _host = SqlMapApiAdress;
+            _host = sqlMapApiAddress;
             _port = port;
         }
 
-        public Database GetDatabaseType(string url, string sessionCookie)
+        public async Task<Database> GetDatabaseType(string url, string sessionCookie)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
@@ -30,8 +30,8 @@ namespace SqlMapAPIWrapperLib
                     string taskid = "";
                     try
                     {
-                        taskid = manager.NewTask();
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        taskid = await manager.NewTask();
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                         options["url"] = url;
                         options["cookie"] = sessionCookie;
@@ -39,15 +39,12 @@ namespace SqlMapAPIWrapperLib
                         options["getBanner"] = true;
 
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
                         return CheckForGetDatabaseType(data);
                     }
                     catch (Exception e)
@@ -57,13 +54,13 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                     }
                 }
             }
         }
 
-        public Database GetDatabaseType(string postData)
+        public async Task<Database> GetDatabaseType(string postData)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
@@ -72,8 +69,8 @@ namespace SqlMapAPIWrapperLib
                     string taskid = "", filename = "";
                     try
                     {
-                        taskid = manager.NewTask();
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        taskid = await manager.NewTask();
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
                         filename = $"{Directory.GetCurrentDirectory()}/{Guid.NewGuid()}";
                         
                         if (!CreateFileFromData(filename, postData))
@@ -84,15 +81,12 @@ namespace SqlMapAPIWrapperLib
                         options["getBanner"] = true;
 
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
                         return CheckForGetDatabaseType(data);
 
                     }
@@ -103,49 +97,46 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                         File.Delete(filename);
                     }
                 }
             }
         }
 
-        public bool IsSqlinjectable(string url, string sessionCookie)
+        public async Task<bool> IsSqlinjectable(string url, string sessionCookie)
         {
-            return !string.IsNullOrWhiteSpace(GetDatabaseType(url, sessionCookie)?.name);
+            return !string.IsNullOrWhiteSpace((await GetDatabaseType(url, sessionCookie))?.Name);
         }
 
-        public bool IsSqlinjectable(string postData)
+        public async Task<bool> IsSqlinjectable(string postData)
         {
-            return !string.IsNullOrWhiteSpace(GetDatabaseType(postData)?.name);
+            return !string.IsNullOrWhiteSpace((await GetDatabaseType(postData))?.Name);
         }
 
-        public List<string> GetDatabases(string url, string sessionCookie)
+        public async Task<List<string>> GetDatabases(string url, string sessionCookie)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
                 using (SqlmapManager manager = new SqlmapManager(session))
                 {
-                    string taskid = manager.NewTask();
+                    string taskid = await manager.NewTask();
 
                     try
                     {
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                         options["url"] = url;
                         options["cookie"] = sessionCookie;
                         options["getDbs"] = true;
                         options["excludeSysDbs"] = true;
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
                         return CheckForGetDatabases(data);
                     }
                     catch (Exception e)
@@ -155,24 +146,24 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                     }
                 }
             }
         }
 
-        public List<string> GetDatabases(string postData)
+        public async Task<List<string>> GetDatabases(string postData)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
                 using (SqlmapManager manager = new SqlmapManager(session))
                 {
-                    string taskid = manager.NewTask();
+                    string taskid = await manager.NewTask();
                     string filename = "";
 
                     try
                     {
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                         filename = $"{Directory.GetCurrentDirectory()}/{Guid.NewGuid()}";
                         
@@ -183,15 +174,12 @@ namespace SqlMapAPIWrapperLib
                         options["getDbs"] = true;
                         options["excludeSysDbs"] = true;
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
                         return CheckForGetDatabases(data);
 
                     }
@@ -202,23 +190,23 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                     }
                 }
             }
         }
 
-        public List<string> GetDatabaseTables(string url, string sessionCookie, string db)
+        public async Task<List<string>> GetDatabaseTables(string url, string sessionCookie, string db)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
                 using (SqlmapManager manager = new SqlmapManager(session))
                 {
-                    string taskid = manager.NewTask();
+                    string taskid = await manager.NewTask();
 
                     try
                     {
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                         options["url"] = url;
                         options["cookie"] = sessionCookie;
@@ -226,15 +214,12 @@ namespace SqlMapAPIWrapperLib
                         options["excludeSysDbs"] = true;
                         options["db"] = db;
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
                         return CheckDataForGetDatabaseTables(data, db);
                     }
                     catch (Exception e)
@@ -244,25 +229,25 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                     }
                 }
             }
         }
 
-        public List<string> GetDatabaseTables(string postData, string db)
+        public async Task<List<string>> GetDatabaseTables(string postData, string db)
         {
             {
                 using (SqlmapSession session = new SqlmapSession(_host, _port))
                 {
                     using (SqlmapManager manager = new SqlmapManager(session))
                     {
-                        string taskid = manager.NewTask();
+                        string taskid = await manager.NewTask();
                         string filename = "";
 
                         try
                         {
-                            Dictionary<string, object> options = manager.GetOptions(taskid);
+                            Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                             filename = $"{Directory.GetCurrentDirectory()}/{Guid.NewGuid()}";
                             
@@ -275,15 +260,13 @@ namespace SqlMapAPIWrapperLib
                             options["db"] = db;
 
 
-                            manager.StartTask(taskid, options);
-                            SqlmapStatus status = manager.GetScanStatus(taskid);
-                            while (status.Status != "terminated")
-                            {
-                                System.Threading.Thread.Sleep(waitingTime);
-                                status = manager.GetScanStatus(taskid);
-                            }
+                            if (!(await manager.StartTask(taskid, options)))
+                                return null;
 
-                            var data = manager.GetData(taskid);
+
+                            await CheckForStatus(manager, taskid);
+
+                            var data = await manager.GetData(taskid);
                             return CheckDataForGetDatabaseTables(data, db);
 
                         }
@@ -294,25 +277,25 @@ namespace SqlMapAPIWrapperLib
                         }
                         finally
                         {
-                            manager.DeleteTask(taskid);
+                            await manager.DeleteTask(taskid);
                         }
                     }
                 }
             }
         }
 
-        public Dictionary<string, List<string>> GetTableContentFromDatabase(string url, string sessionCookie,
+        public async Task<Dictionary<string, List<string>>> GetTableContentFromDatabase(string url, string sessionCookie,
             string table, string db)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
                 using (SqlmapManager manager = new SqlmapManager(session))
                 {
-                    string taskid = manager.NewTask();
+                    string taskid = await manager.NewTask();
 
                     try
                     {
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                         options["url"] = url;
                         options["cookie"] = sessionCookie;
@@ -321,15 +304,12 @@ namespace SqlMapAPIWrapperLib
                         options["db"] = db;
                         options["tbl"] = table;
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
                         return CheckDataForGetTableContentFromDatabase(data);
                     }
                     catch (Exception e)
@@ -339,25 +319,25 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                     }
                 }
             }
         }
 
-        public Dictionary<string, List<string>> GetTableContentFromDatabase(string postData, string table, string db)
+        public async Task<Dictionary<string, List<string>>> GetTableContentFromDatabase(string postData, string table, string db)
         {
             {
                 using (SqlmapSession session = new SqlmapSession(_host, _port))
                 {
                     using (SqlmapManager manager = new SqlmapManager(session))
                     {
-                        string taskid = manager.NewTask();
+                        string taskid = await manager.NewTask();
                         string filename = "";
 
                         try
                         {
-                            Dictionary<string, object> options = manager.GetOptions(taskid);
+                            Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                             filename = $"{Directory.GetCurrentDirectory()}/{Guid.NewGuid()}";
                             
@@ -371,15 +351,13 @@ namespace SqlMapAPIWrapperLib
                             options["tbl"] = table;
 
 
-                            manager.StartTask(taskid, options);
-                            SqlmapStatus status = manager.GetScanStatus(taskid);
-                            while (status.Status != "terminated")
-                            {
-                                System.Threading.Thread.Sleep(waitingTime);
-                                status = manager.GetScanStatus(taskid);
-                            }
+                            if (!(await manager.StartTask(taskid, options)))
+                                return null;
 
-                            var data = manager.GetData(taskid);
+
+                            await CheckForStatus(manager, taskid);
+
+                            var data = await manager.GetData(taskid);
                             return CheckDataForGetTableContentFromDatabase(data);
                         }
                         catch (Exception e)
@@ -389,38 +367,35 @@ namespace SqlMapAPIWrapperLib
                         }
                         finally
                         {
-                            manager.DeleteTask(taskid);
+                            await manager.DeleteTask(taskid);
                         }
                     }
                 }
             }
         }
 
-        public Dictionary<string, string> GetDatabasePasswords(string url, string sessionCookie)
+        public async Task<Dictionary<string, string>> GetDatabasePasswords(string url, string sessionCookie)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
             {
                 using (SqlmapManager manager = new SqlmapManager(session))
                 {
-                    string taskid = manager.NewTask();
+                    string taskid = await manager.NewTask();
 
                     try
                     {
-                        Dictionary<string, object> options = manager.GetOptions(taskid);
+                        Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                         options["url"] = url;
                         options["cookie"] = sessionCookie;
                         options["getPasswordHashes"] = true;
 
-                        manager.StartTask(taskid, options);
-                        SqlmapStatus status = manager.GetScanStatus(taskid);
-                        while (status.Status != "terminated")
-                        {
-                            System.Threading.Thread.Sleep(waitingTime);
-                            status = manager.GetScanStatus(taskid);
-                        }
+                        if (!(await manager.StartTask(taskid, options)))
+                            return null;
 
-                        var data = manager.GetData(taskid);
+                        await CheckForStatus(manager, taskid);
+
+                        var data = await manager.GetData(taskid);
 
                         return CheckDataForGetDatabasePasswords(data);
                     }
@@ -431,25 +406,25 @@ namespace SqlMapAPIWrapperLib
                     }
                     finally
                     {
-                        manager.DeleteTask(taskid);
+                        await manager.DeleteTask(taskid);
                     }
                 }
             }
         }
 
-        public Dictionary<string, string> GetDatabasePasswords(string postData)
+        public async Task<Dictionary<string, string>> GetDatabasePasswords(string postData)
         {
             {
                 using (SqlmapSession session = new SqlmapSession(_host, _port))
                 {
                     using (SqlmapManager manager = new SqlmapManager(session))
                     {
-                        string taskid = manager.NewTask();
+                        string taskid = await manager.NewTask();
                         string filename = "";
 
                         try
                         {
-                            Dictionary<string, object> options = manager.GetOptions(taskid);
+                            Dictionary<string, object> options = await manager.GetOptions(taskid);
 
                             filename = $"{Directory.GetCurrentDirectory()}/{Guid.NewGuid()}";
                             
@@ -460,15 +435,12 @@ namespace SqlMapAPIWrapperLib
                             options["getPasswordHashes"] = true;
 
 
-                            manager.StartTask(taskid, options);
-                            SqlmapStatus status = manager.GetScanStatus(taskid);
-                            while (status.Status != "terminated")
-                            {
-                                System.Threading.Thread.Sleep(waitingTime);
-                                status = manager.GetScanStatus(taskid);
-                            }
+                            if (!(await manager.StartTask(taskid, options)))
+                                return null;
 
-                            var data = manager.GetData(taskid);
+                            await CheckForStatus(manager, taskid);
+
+                            var data = await manager.GetData(taskid);
 
                             return CheckDataForGetDatabasePasswords(data);
                         }
@@ -479,7 +451,7 @@ namespace SqlMapAPIWrapperLib
                         }
                         finally
                         {
-                            manager.DeleteTask(taskid);
+                            await manager.DeleteTask(taskid);
                         }
                     }
                 }
@@ -593,15 +565,25 @@ namespace SqlMapAPIWrapperLib
                 Database retVal = new Database();
 
                 var temp = (data.Data[1].Value as JArray)?[0] as JObject;
-                retVal.name = temp?.GetValue("dbms")?.ToString();
-                retVal.version = temp?.GetValue("dbms_version")?.ToString();
+                retVal.Name = temp?.GetValue("dbms")?.ToString();
+                retVal.Version = temp?.GetValue("dbms_version")?.ToString();
 
-                if (string.IsNullOrWhiteSpace(retVal.name))
+                if (string.IsNullOrWhiteSpace(retVal.Name))
                     return null;
                 
                 return retVal;
             }
             return null;
         }
-    }
+
+        protected async Task CheckForStatus(SqlmapManager manager ,string taskid)
+        {
+            SqlmapStatus status = await manager.GetScanStatus(taskid);
+            while (status.Status != "terminated" && status.Status != "not running!")
+            {
+                System.Threading.Thread.Sleep(waitingTime);
+                status = await manager.GetScanStatus(taskid);
+            }
+        }
+    } 
 }

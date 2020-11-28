@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 using SqlMapAPIWrapperLib;
 
 namespace SqlMapAPIWrapper
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string data = @"POST /sqli_6.php HTTP/1.1
 Host: localhost
@@ -30,7 +25,7 @@ Sec-Fetch-Dest: document
 Referer: http://localhost/sqli_6.php
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
-Cookie: security_level=0; PHPSESSID=mr1i4bgjfv6lk5o82arnndjk22
+Cookie: security_level=0; PHPSESSID=5pdj4a7fk5vj1amju59piiht51
 Connection: close
 
 title=test&action=search";
@@ -51,40 +46,42 @@ Sec-Fetch-Dest: document
 Referer: http://localhost/sqli_6.php
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
-Cookie: security_level=0; PHPSESSID=mr1i4bgjfv6lk5o82arnndjk22
+Cookie: security_level=0; PHPSESSID=5pdj4a7fk5vj1amju59piiht51
 Connection: close
 ";
 
             SqlMapApiWrapper wrapper = new SqlMapApiWrapper("127.0.0.1", 8775);
             string targetUrl = "http://localhost/sqli_1.php?title=test";
             string targetUrlNotWorking = "http://localhost/sqli_1.php";
-            string sessionCookie = "security_level=0; PHPSESSID=mr1i4bgjfv6lk5o82arnndjk22";
+            string sessionCookie = "security_level=0; PHPSESSID=5pdj4a7fk5vj1amju59piiht51";
             string db = "bWAPP";
             string table = "users";
-            bool injectable = wrapper.IsSqlinjectable(targetUrl, sessionCookie);
-            bool injectable2 = wrapper.IsSqlinjectable(data);
-            bool injectable3 = wrapper.IsSqlinjectable(targetUrlNotWorking,sessionCookie);
-            bool injectable4 = wrapper.IsSqlinjectable(dataNotWorking);
-            var dbs = wrapper.GetDatabases(targetUrl, sessionCookie);
-            var dbs2 = wrapper.GetDatabases(data);
-            var dbs3 = wrapper.GetDatabases(targetUrlNotWorking, sessionCookie);
-            var dbs4 = wrapper.GetDatabases(dataNotWorking);
-            var tables = wrapper.GetDatabaseTables(targetUrl, sessionCookie, db);
-            var tables2 = wrapper.GetDatabaseTables(data, db);
-            var tables3 = wrapper.GetDatabaseTables(targetUrlNotWorking, sessionCookie, db);
-            var tables4 = wrapper.GetDatabaseTables(dataNotWorking, db);
-            var tableContent = wrapper.GetTableContentFromDatabase(targetUrl, sessionCookie, table, db);
-            var tableContent2 = wrapper.GetTableContentFromDatabase(data, table, db);
-            var tableContent3 = wrapper.GetTableContentFromDatabase(targetUrlNotWorking, sessionCookie, table, db);
-            var tableContent4 = wrapper.GetTableContentFromDatabase(dataNotWorking, table, db);
-            var dbType = wrapper.GetDatabaseType(targetUrl, sessionCookie);
-            var dbType2 = wrapper.GetDatabaseType(data);
-            var dbType3 = wrapper.GetDatabaseType(targetUrlNotWorking, sessionCookie);
-            var dbType4 = wrapper.GetDatabaseType(dataNotWorking);
-            var passwords = wrapper.GetDatabasePasswords(targetUrl, sessionCookie);
-            var passwords2 = wrapper.GetDatabasePasswords(data);
-            var passwords3 = wrapper.GetDatabasePasswords(targetUrlNotWorking, sessionCookie);
-            var passwords4 = wrapper.GetDatabasePasswords(dataNotWorking);
+            
+            //One Task at a time otherwise bWAPP gets DOSed
+            var injectable =  await wrapper.IsSqlinjectable(targetUrl, sessionCookie);
+            var injectable2 = await wrapper.IsSqlinjectable(data);
+            var injectable3 = await wrapper.IsSqlinjectable(targetUrlNotWorking,sessionCookie);
+            var injectable4 =  await wrapper.IsSqlinjectable(dataNotWorking);
+            var dbs =  await wrapper.GetDatabases(targetUrl, sessionCookie);
+            var dbs2 =  await wrapper.GetDatabases(data);
+            var dbs3 =  await wrapper.GetDatabases(targetUrlNotWorking, sessionCookie);
+            var dbs4 =  await wrapper.GetDatabases(dataNotWorking);
+            var tables =  await wrapper.GetDatabaseTables(targetUrl, sessionCookie, db);
+            var tables2 =  await wrapper.GetDatabaseTables(data, db);
+            var tables3 =  await wrapper.GetDatabaseTables(targetUrlNotWorking, sessionCookie, db);
+            var tables4 =  await wrapper.GetDatabaseTables(dataNotWorking, db);
+            var tableContent =  await wrapper.GetTableContentFromDatabase(targetUrl, sessionCookie, table, db);
+            var tableContent2 =  await wrapper.GetTableContentFromDatabase(data, table, db);
+            var tableContent3 =  await wrapper.GetTableContentFromDatabase(targetUrlNotWorking, sessionCookie, table, db);
+            var tableContent4 =  await wrapper.GetTableContentFromDatabase(dataNotWorking, table, db);
+            var dbType = await wrapper.GetDatabaseType(targetUrl, sessionCookie);
+            var dbType2 =  await wrapper.GetDatabaseType(data);
+            var dbType3 =  await wrapper.GetDatabaseType(targetUrlNotWorking, sessionCookie);
+            var dbType4 =  await wrapper.GetDatabaseType(dataNotWorking);
+            var passwords =  await wrapper.GetDatabasePasswords(targetUrl, sessionCookie);
+            var passwords2 =  await wrapper.GetDatabasePasswords(data);
+            var passwords3 =  await wrapper.GetDatabasePasswords(targetUrlNotWorking, sessionCookie);
+            var passwords4 =  await wrapper.GetDatabasePasswords(dataNotWorking);
 
             bool working = false;
 
@@ -94,7 +91,7 @@ Connection: close
             tables2.Sort();
             bool btables = tables.SequenceEqual(tables2);
             bool btableContent = tableContent.Count == tableContent2.Count;
-            bool bdbType = dbType.name == dbType2.name;
+            bool bdbType = dbType.Name == dbType2.Name;
             bool bpasswords = passwords.SequenceEqual(passwords2); 
             
             bool binjectable2 = !(injectable3 && injectable4);
@@ -115,20 +112,10 @@ Connection: close
             {
                 try
                 {
-                    i++;
-                    HttpWebRequest req = (HttpWebRequest) WebRequest.Create("http://127.0.0.1:8775/task/new");
-                    req.Method = "GET";
-                    string resp = string.Empty;
-                    var stream = req.GetResponse().GetResponseStream();
-
-                    using (StreamReader rdr = new StreamReader(stream))
-                    {
-                        resp = rdr.ReadToEnd();
-                    }
-
-                    stream.Close();
-                    //Console.WriteLine(resp);
-                    //System.Threading.Thread.Sleep(new TimeSpan(0,0,1));
+                   SqlmapSession session = new SqlmapSession("127.0.0.1");
+                   string resp = await session.ExecuteGet("/task/new");
+                   //Console.WriteLine(resp);
+                   //System.Threading.Thread.Sleep(new TimeSpan(0,0,1));
                 }
                 catch (Exception e)
                 {
