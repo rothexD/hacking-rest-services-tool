@@ -1,69 +1,56 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Hacking_Rest_SqlInjetor.WebClient
 {
     public class HttpContext : AbstractHttpContext
     {
-        private readonly List<KeyValuePair<string, string>> _fields;
+        internal Dictionary<string, string> Fields { get; set; }
 
         public HttpContext()
         {
-            _fields = new List<KeyValuePair<string, string>>();
-        }
-        
-        public HttpContext(HttpMethod method, Uri uri) : base(method, uri)
-        {
-            _fields = new List<KeyValuePair<string, string>>();
+            Fields = new Dictionary<string, string>();
         }
         
         public HttpContext(HttpMethod method, string uri) : base(method, uri)
         {
-            _fields = new List<KeyValuePair<string, string>>();
+            Fields = new Dictionary<string, string>();
+        }
+        
+        public HttpContext(HttpMethod method, string uri, Dictionary<string, string> fields) : base(method, uri)
+        {
+            Fields = fields;
         }
 
         public override void Reset()
         {
-            _fields.Clear();
+            Fields.Clear();
         }
 
         public override void AddField(string name, string value)
         {
-            RemoveFieldsWithName(name);
-            var pair = new KeyValuePair<string, string>(name, value);
-            _fields.Add(pair);
+            Fields[name] = value;
         }
 
-        public override void BuildRequest()
+        public override AbstractHttpContext BuildRequest()
         {
             if (Method == HttpMethod.Get)
             {
-                string content = new FormUrlEncodedContent(_fields).ReadAsStringAsync().Result;
+                string content = new FormUrlEncodedContent(Fields).ReadAsStringAsync().Result;
                 string newUri = RequestUri + "?" + content;
                 RequestUri = new Uri(newUri);
-                return;
+                return this;
             }
 
-            if (Method == HttpMethod.Post)
+            if (Method != HttpMethod.Post)
             {
-                Content = new FormUrlEncodedContent(_fields);
-                return;
+                throw new ArgumentException("BuildRequest: Only GET and POST are supported.");
             }
-            
-            throw new ArgumentException("BuildRequest: Only GET and POST are supported.");
-        }
 
-        private void RemoveFieldsWithName(string name)
-        {
-            var myFields = new List<KeyValuePair<string, string>>(_fields);
-            foreach (var field in myFields)
-            {
-                if (field.Key == name)
-                {
-                    _fields.Remove(field);
-                }
-            }
+            Content = new FormUrlEncodedContent(Fields);
+            return this;
         }
     }
 }
