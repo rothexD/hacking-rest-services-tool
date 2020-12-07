@@ -1,0 +1,3 @@
+[submodule "SqlMapAPIWrapper/vendor/sqlmap"]
+	path = SqlMapAPIWrapper/vendor/sqlmap
+	url = https://github.com/sqlmapproject/sqlmap.git
