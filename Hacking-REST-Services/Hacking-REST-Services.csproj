@@ -10,4 +10,8 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.28" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SqlMapAPIWrapper\SqlMapApiWrapperLib\SqlMapApiWrapperLib.csproj" />
+  </ItemGroup>
+
 </Project>

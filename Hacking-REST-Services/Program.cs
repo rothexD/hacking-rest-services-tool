@@ -15,6 +15,8 @@ namespace Hacking_Rest_SqlInjetor
         {
             const string loginPage = "http://localhost:30000/login.php";
             const string xssPage = "http://localhost:30000/xss_get.php";
+            const string SqlApiAddress = "127.0.0.1";
+            const int SqlApiPort = 8775;            
             
             // login to bWAPP
             var loginFields = new Dictionary<string, string>
@@ -38,6 +40,16 @@ namespace Hacking_Rest_SqlInjetor
             {
                 AbstractServiceHandler service = new XssAttackGetMethodInputs();
                 service.StartAttack(xssGetUrl, httpClient);
+            });
+            
+            serviceDirectory.AddServiceCall("SQL-GET", (sqlGetUrl, httpClient) =>
+            {
+                new SqlInjection(SqlApiAddress,SqlApiPort).StartAttack(sqlGetUrl,httpClient);
+            });
+            
+            serviceDirectory.AddServiceCall("SQL-POST", (postData, httpClient) =>
+            {
+                new SqlInjection(SqlApiAddress,SqlApiPort).StartAttackPost(postData);
             });
 
             char input = '\0';
