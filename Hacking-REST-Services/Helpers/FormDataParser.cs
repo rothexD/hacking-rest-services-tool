@@ -12,7 +12,7 @@ namespace Hacking_REST_Services.Helpers
 {
     public class FormDataParser
     {
-        public List<HttpContext> BuildHttpContexts(List<FormData> data)
+        public static List<HttpContext> BuildHttpContexts(IList<FormData> data)
         {
             List <HttpContext> listOfContextes = new List<HttpContext>();
             foreach(var item in data)
@@ -52,7 +52,8 @@ namespace Hacking_REST_Services.Helpers
 
                     }
                 }
-            }                        
+            }
+            return listOfContextes;
         }
         public void PrintFormDataList(IEnumerable<FormData> data)
         {

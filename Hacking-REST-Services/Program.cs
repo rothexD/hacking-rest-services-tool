@@ -6,6 +6,7 @@ using Hacking_REST_Services.ServiceHandlers;
 using Hacking_Rest_SqlInjetor.ServiceHandlers;
 using Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers;
 using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Helpers;
 
 namespace Hacking_Rest_SqlInjetor
 {
@@ -19,6 +20,7 @@ namespace Hacking_Rest_SqlInjetor
             const int SqlApiPort = 8775;            
             
             // login to bWAPP
+            /*
             var loginFields = new Dictionary<string, string>
             {
                 {"login", "bee"},
@@ -29,19 +31,25 @@ namespace Hacking_Rest_SqlInjetor
 
             var loginRequest = new HttpContext(HttpMethod.Post, loginPage, loginFields);
             loginRequest.BuildRequest();
+            */
 
-            ICustomHttpClient client = new CustomHttpClient();
-            client.Post(loginRequest).Wait();
-            
+
+            ICustomHttpClient client = new CustomHttpClient();           
             var serviceDirectory = new ServiceDirectory();
 
             // XSS GET Parameter Injection
-            serviceDirectory.AddServiceCall("XSS-GET", (xssGetUrl, httpClient) =>
+            serviceDirectory.AddServiceCall("XSS-INPUT", (xssGetUrl, httpClient) =>
             {
-                AbstractServiceHandler service = new XssAttackGetMethodInputs();
+                AbstractServiceHandler service = new XSS_Attack_Inputs();
                 service.StartAttack(xssGetUrl, httpClient);
             });
-            
+
+            serviceDirectory.AddServiceCall("XSS-SELECT", (xssGetUrl, httpClient) =>
+            {
+                AbstractServiceHandler service = new XSS_Attack_Selects();
+                service.StartAttack(xssGetUrl, httpClient);
+            });
+
             serviceDirectory.AddServiceCall("SQL-GET", (sqlGetUrl, httpClient) =>
             {
                 new SqlInjection(SqlApiAddress,SqlApiPort).StartAttack(sqlGetUrl,httpClient);
@@ -52,27 +60,91 @@ namespace Hacking_Rest_SqlInjetor
                 new SqlInjection(SqlApiAddress,SqlApiPort).StartAttackPost(postData);
             });
 
-            char input = '\0';
+            string input = "\0";
+            while (true)
+            {
 
-            while (input != '0' && input != '1')
-            {
                 Console.WriteLine("Please specify a mode\n" +
-                                  " + 0 = Automatic\n" +
-                                  " + 1 = Manual");
-                do
+                                      " + 0 = Login\n" +
+                                      " + 1 = Clear Cookies\n" +
+                                      " + 2 = XSS-INPUT\n" +
+                                      " + 3 = XSS-INPUT\n" +
+                                      " + 4 = SQLINJECT\n");
+
+                input = Console.ReadLine();
+                input = input.Trim();
+                switch (input)
                 {
-                    input = (char) Console.Read();
-                } while (char.IsWhiteSpace(input));
+                    case "0":
+                        new LoginHelper().tryLogin(client);
+                        break;
+                    case "1":
+                        client.ClientHandler.CookieContainer = new System.Net.CookieContainer();
+                        break;
+                    case "2":
+                        Console.WriteLine("Enter the targetUri");
+                        Uri targeturi;
+                        try
+                        {
+                            targeturi = new Uri(Console.ReadLine());
+                        }
+                        catch
+                        {
+                            break;
+                        }
+                        Console.WriteLine(targeturi.AbsoluteUri);
+                        serviceDirectory.RunTest("XSS-INPUT", targeturi.AbsoluteUri, client);
+                        break;
+                    case "3":
+                        Console.WriteLine("Enter the targetUri");
+                        try
+                        {
+                            targeturi = new Uri(Console.ReadLine());
+                        }
+                        catch
+                        {
+                            break;
+                        }
+                        serviceDirectory.RunTest("XSS-SELECT", targeturi.AbsoluteUri, client);
+                        break;
+                    case "4":
+                        //sql injection get
+                        Console.WriteLine("Enter the targetUri");
+                        try
+                        {
+                            targeturi = new Uri(Console.ReadLine());
+                        }
+                        catch
+                        {
+                            break;
+                        }
+                        var openSite = client.Get(targeturi.AbsoluteUri);
+                        var document = CustomHttpClient.GetHtmlDocument(openSite);
+                        var formsOfHtmlDocument = FormDataParser.GetFormsOfHtmlDocument(document, targeturi.AbsoluteUri);
+                        var ListHttpContext = FormDataParser.BuildHttpContexts(formsOfHtmlDocument);
+
+                        foreach (var item in ListHttpContext)
+                        {
+                            item.BuildRequest();
+                            if (item.Method == HttpMethod.Get)
+                            {
+                                serviceDirectory.RunTest("SQL-GET", item.RequestUri.AbsoluteUri, client);
+                            }
+                            else
+                            {
+                                serviceDirectory.RunTest("SQL-POST", item.GetRequestAsHttpString(client.ClientHandler.CookieContainer.GetCookieHeader(targeturi), null), client);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
-            
-            switch (input)
-            {
-                case '0':
-                    serviceDirectory.RunAllTests(xssPage, client);
-                    break;
-                
-                case '1':
-                    var serviceNamesEnumerable = serviceDirectory.GetServiceNames();
+        }
+    }
+}
+/*
+  var serviceNamesEnumerable = serviceDirectory.GetServiceNames();
                     var serviceNames = serviceNamesEnumerable.ToList();
                     Console.WriteLine("\nYou chose the manual mode ...");
                     string serviceInput;
@@ -98,7 +170,4 @@ namespace Hacking_Rest_SqlInjetor
                     
                     serviceDirectory.RunTest(serviceInput, xssPage, client);
                     break;
-            }
-        }
-    }
-}
+ */

