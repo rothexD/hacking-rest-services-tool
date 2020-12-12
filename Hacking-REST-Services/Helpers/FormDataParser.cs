@@ -5,11 +5,55 @@ using Hacking_Rest_SqlInjetor.Form;
 using Hacking_Rest_SqlInjetor.WebClient;
 using HtmlAgilityPack;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Hacking_REST_Services.Helpers
 {
     public class FormDataParser
     {
+        public List<HttpContext> BuildHttpContexts(List<FormData> data)
+        {
+            List <HttpContext> listOfContextes = new List<HttpContext>();
+            foreach(var item in data)
+            {
+                HttpContext singleContext = new HttpContext();
+                if(item.Method == "GET")
+                {
+                    singleContext.Method = HttpMethod.Get;
+                }
+                else if(item.Method == "POST"){
+                    singleContext.Method = HttpMethod.Post;
+                }
+                else
+                {
+                    continue;
+                }
+                try
+                {
+                    singleContext.RequestUri = new Uri(item.Action);
+                }
+                catch
+                {
+                    continue;
+                }
+                foreach (var Inputs in item.InputFields)
+                {
+                    singleContext.AddField(Inputs.Name, Inputs.Value);
+                }
+                foreach (var Selects in item.SelectFields)
+                {
+                    try
+                    {
+                        singleContext.AddField(Selects.Name, Selects.OptionValues[0]);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }                        
+        }
         public void PrintFormDataList(IEnumerable<FormData> data)
         {
             foreach (var item in data)
