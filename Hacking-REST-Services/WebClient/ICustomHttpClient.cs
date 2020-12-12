@@ -10,5 +10,8 @@ namespace Hacking_Rest_SqlInjetor.WebClient
         public Task<HttpResponseMessage> Get(AbstractHttpContext request);
 
         public Task<HttpResponseMessage> Post(AbstractHttpContext request);
-    }
+        public Task<HttpResponseMessage> ByContextMethod(AbstractHttpContext request);
+
+        public HttpClientHandler ClientHandler { get; }
+    } 
 }

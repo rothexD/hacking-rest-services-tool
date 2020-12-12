@@ -40,6 +40,7 @@ namespace Hacking_Rest_SqlInjetor.WebClient
             {
                 string content = new FormUrlEncodedContent(Fields).ReadAsStringAsync().Result;
                 string newUri = RequestUri + "?" + content;
+                Console.WriteLine(newUri);
                 RequestUri = new Uri(newUri);
                 return this;
             }
