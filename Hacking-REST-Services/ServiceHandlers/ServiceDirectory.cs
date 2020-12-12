@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hacking_Rest_SqlInjetor.WebClient;
 
 namespace Hacking_REST_Services.ServiceHandlers
@@ -24,6 +25,11 @@ namespace Hacking_REST_Services.ServiceHandlers
             {
                 service.Invoke(targetUrl, client);
             }
+        }
+
+        public IEnumerable<string> GetServiceNames()
+        {
+            return _services.Select(entry => entry.Key);
         }
 
         public void RunTest(string name, string targetUrl, ICustomHttpClient client)
