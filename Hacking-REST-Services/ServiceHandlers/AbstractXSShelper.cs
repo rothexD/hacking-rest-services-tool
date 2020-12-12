@@ -30,9 +30,8 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers
                 foreach (var request in requests)
                 {
                     request.BuildRequest();
-                    //Console.WriteLine(request.Content.ReadAsStringAsync().Result);
 
-                    var performGetInjection = request.Method == HttpMethod.Get ? client.Get(request) : client.Post(request);
+                    var performGetInjection = request.Method == HttpMethod.Get ? client.Get(request) : client.Post(request);                   
                     string injectionResponse = CustomHttpClient.GetResponseContent(performGetInjection);
                     const string scriptRegex = @"<script>alert\('X(.*?)SS'\)</script>";
                     const RegexOptions options = RegexOptions.IgnoreCase | RegexOptions.Singleline;

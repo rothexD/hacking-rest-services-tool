@@ -15,7 +15,7 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
             var returnList = new List<HttpContext>();
             foreach (var input in form.InputFields)
             {
-                var context = new HttpContext(form.Method == "GET" ? HttpMethod.Get : HttpMethod.Post, targetUri);
+                var context = new HttpContext(form.Method.ToUpper() == "GET" ? HttpMethod.Get : HttpMethod.Post, targetUri);
                 foreach (var inputField in form.InputFields)
                 {
                     context.AddField(inputField.Name, inputField.Value ?? "test");

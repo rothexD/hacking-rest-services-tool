@@ -130,6 +130,16 @@ namespace Hacking_REST_Services.Helpers
             foreach (var inputNode in parent.Descendants("input"))
             {
                 var input = CreateInput(inputNode);
+                if (input.Name is null)
+                {
+                    continue;
+                }
+                inputList.Add(input);
+                Console.WriteLine($"{input.Type},{input.Id},{input.Name},{input.Value}\r\n");
+            }
+            foreach (var inputNode in parent.Descendants("textarea"))
+            {
+                var input = CreateInput(inputNode);
 
                 if (input.Name is null)
                 {
@@ -139,6 +149,8 @@ namespace Hacking_REST_Services.Helpers
                 inputList.Add(input);
                 Console.WriteLine($"{input.Type},{input.Id},{input.Name},{input.Value}\r\n");
             }
+
+
             return inputList;
         }
 

@@ -14,7 +14,7 @@ namespace Hacking_Rest_SqlInjetor.WebClient
         {
             ClientHandler = new HttpClientHandler()
             {
-                AllowAutoRedirect = false,
+                //AllowAutoRedirect = false,
                 UseCookies = true,
                 CookieContainer = new CookieContainer()              
             };
