@@ -18,7 +18,7 @@ namespace Hacking_Rest_SqlInjetor.WebClient
                 UseCookies = true,
                 CookieContainer = new CookieContainer()              
             };
-
+           
             _client = new HttpClient(ClientHandler);
         }
 
