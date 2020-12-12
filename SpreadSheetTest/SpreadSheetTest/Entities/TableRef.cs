@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SpreadSheetLib.Entities
+namespace SpreadSheetTest.Entities
 {
     /// <summary>
     /// Contains information about a user-specified table including its name,

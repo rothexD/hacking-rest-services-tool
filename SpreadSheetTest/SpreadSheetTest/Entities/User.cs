@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
-namespace SpreadSheetLib.Entities
+namespace SpreadSheetTest.Entities
 {
     /// <summary>
     /// Describes a single user.

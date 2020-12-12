@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 
-namespace SpreadSheetLib.Entities
+namespace SpreadSheetTest.Entities
 {
     public class DataSetColumn
     {

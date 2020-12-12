@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpreadSheetLib.Entities
+namespace SpreadSheetTest.Entities
 {
     public class AuthenticationModel
     {
