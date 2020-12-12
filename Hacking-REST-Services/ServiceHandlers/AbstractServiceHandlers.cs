@@ -10,7 +10,6 @@ namespace Hacking_Rest_SqlInjetor.ServiceHandlers
 {
     public abstract class AbstractServiceHandler : FormDataParser
     {
-        public abstract void StartAttack(string targetUri, ICustomHttpClient client);
-      
+        public abstract void StartAttack(string targetUri, ICustomHttpClient client);     
     }
 }
