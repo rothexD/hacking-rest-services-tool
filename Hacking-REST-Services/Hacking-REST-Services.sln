@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hacking-REST-Services", "Hacking-REST-Services.csproj", "{9231EBEA-D5CE-4AD5-8FF8-701BE8951512}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackingRestServices.Test", "..\HackingRestServices.Test\HackingRestServices.Test\HackingRestServices.Test.csproj", "{839A0FEE-87F5-4791-8DD6-71C70D96D9F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9231EBEA-D5CE-4AD5-8FF8-701BE8951512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9231EBEA-D5CE-4AD5-8FF8-701BE8951512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9231EBEA-D5CE-4AD5-8FF8-701BE8951512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{839A0FEE-87F5-4791-8DD6-71C70D96D9F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{839A0FEE-87F5-4791-8DD6-71C70D96D9F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{839A0FEE-87F5-4791-8DD6-71C70D96D9F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{839A0FEE-87F5-4791-8DD6-71C70D96D9F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
