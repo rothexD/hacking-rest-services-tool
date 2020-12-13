@@ -20,24 +20,6 @@ namespace SpreadSheetTest.Entities
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// The hashed password of the user.
-        /// </summary>
-        public byte[] PasswordHash { get; set; }
-
-        /// <summary>
-        /// Tables that this user owns.
-        /// </summary>
-        public ICollection<TableRef> OwnTables { get; set; }
-
-        /// <summary>
-        /// Tables that this user may edit.
-        /// </summary>
-        public ICollection<TableRef> Collaborations { get; set; }
-
-        /// <summary>
-        /// The role of this user.
-        /// </summary>
         public UserRole Role { get; set; }
     }
 

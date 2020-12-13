@@ -19,6 +19,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="HttpRequest.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>HttpRequest.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +30,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>ErrorMessages.resx</DependentUpon>
+      </Compile>
+      <Compile Update="HttpRequest.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>HttpRequest.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

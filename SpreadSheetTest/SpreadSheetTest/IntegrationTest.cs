@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Resources;
@@ -22,6 +23,8 @@ namespace SpreadSheetTest
         public string CookieFromLogin="";
         public string RootUrl { get; set; }
         public SqlMapApiWrapper Wrapper;
+        public NpgsqlConnection Connection;
+        public string UserId;
         
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -30,19 +33,72 @@ namespace SpreadSheetTest
             Handler = new HttpClientHandler();
             Client = new HttpClient(Handler);
             Wrapper = new SqlMapApiWrapper("127.0.0.1",8775);
+            Connection = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=scw");
         }
         
         [SetUp]
         public void Setup()
         {
         }
-
-        [Test]
-        public void test()
+        public async Task DeleteTableContent()
         {
+            var tableNames = await GetAllTables();
+            await Connection.OpenAsync();
+            var transaction = await Connection.BeginTransactionAsync();
+
+            try
+            {
+                foreach (var table in tableNames)
+                {
+                    var sql2 = $"DELETE FROM \"{table}\"";
+                    var cmd2 = new NpgsqlCommand(sql2,Connection);
+                    await cmd2.ExecuteNonQueryAsync();
+                }
+
+                await transaction.CommitAsync();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                await transaction.RollbackAsync();
+                throw;
+            }
+            finally
+            {
+                await Connection.CloseAsync();
+            }
+        }
+
+        private async Task<List<string>> GetAllTables()
+        {
+            await Connection.OpenAsync();
+            List<string> tableNames = new List<string>();
+            try
+            {
+                var sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'";
+                var cmd = new NpgsqlCommand(sql, Connection);
+                var response = await cmd.ExecuteReaderAsync();
+
+                while (response.Read())
+                {
+                    tableNames.Add(response.GetString(0));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                await Connection.CloseAsync();
+            }
+
+            return tableNames;
         }
         
-
         [Test]
         public async Task RegisterUser()
         {
@@ -291,7 +347,7 @@ namespace SpreadSheetTest
             
             Assert.That(!responseTask.IsSuccessStatusCode && response.Contains(ErrorMessages.NoValue));
         }
-        
+        [Test]
         public async Task LoginWithNotExistingUserDb()
         {
             AuthenticationModel model = new AuthenticationModel();
@@ -307,7 +363,7 @@ namespace SpreadSheetTest
             
             Assert.That(!responseTask.IsSuccessStatusCode && response.Contains(ErrorMessages.NotFound));
         }
-        
+        [Test]
         public async Task SqlInjectionLogin()
         {
             
@@ -315,30 +371,129 @@ namespace SpreadSheetTest
             model.Username = "test55";
             model.Password = "test55";
             string jsonData = JsonConvert.SerializeObject(model);
-            
-            string data = $@"POST {RootUrl}/api/service/login HTTP/1.1
-Host: localhost
-Content-Length: 24
-Cache-Control: max-age=0
-Upgrade-Insecure-Requests: 1
-Origin: http://localhost
-Content-Type: application/x-www-form-urlencoded
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
-Sec-Fetch-Site: same-origin
-Sec-Fetch-Mode: navigate
-Sec-Fetch-User: ?1
-Sec-Fetch-Dest: document
-Referer: {RootUrl}
-Accept-Encoding: gzip, deflate
-Accept-Language: en-US,en;q=0.9
-Cookie: {CookieFromLogin}
-Connection: close
 
-{jsonData}";
-            
+            string data = string.Format(HttpRequest.RequestJson, "POST", "/api/service/login", "localhost",
+                CookieFromLogin, jsonData.Length, jsonData);
+
             var isSqlinjectable = await Wrapper.IsSqlinjectable(data);
             Assert.That(!isSqlinjectable);
+        }
+        
+        public async Task SetTestUserToAdmin()
+        {
+            await Connection.OpenAsync();
+            try
+            {
+                    var sql = "UPDATE \"Users\" set \"Role\"= 2 where \"Name\"='test'";
+                    var cmd = new NpgsqlCommand(sql,Connection);
+                    await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                await Connection.CloseAsync();
+            }
+        }
+        [Test]
+        public async Task GetUserList()
+        {
+            string url = $"{RootUrl}/api/admin/user";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<List<User>>(response);
+
+            foreach (var user in users)
+            {
+                if (user.Name == "test")
+                    UserId = user.UserId.ToString();
+            }
+            
+            Assert.That(responseTask.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(UserId) && users.Count > 1);
+        }
+
+        [Test]
+        public async Task GetUser()
+        {
+            string url = $"{RootUrl}/api/admin/user/{UserId}";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<User>(response);
+
+            Assert.That(responseTask.IsSuccessStatusCode && users.Name == "test"); 
+        }
+
+        [Test]
+        public async Task GetUserSqlInjection()
+        {
+            string url = $"{RootUrl}/api/admin/user/*";
+            bool isSqlinjectable = await Wrapper.IsSqlinjectable(url, "");
+            
+            Assert.That(!isSqlinjectable);
+        }
+
+        [Test]
+        public async Task GetEmptyUserTables()
+        {
+            string url = $"{RootUrl}/api/admin/user/{UserId}/table";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+
+            Assert.That(responseTask.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response)); 
+        }
+        [Test]
+        public async Task GetEmptyUserCollaboration()
+        {
+            string url = $"{RootUrl}/api/admin/user/{UserId}/collaboration";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+
+            Assert.That(responseTask.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response)); 
+        }
+        
+        [Test]
+        public async Task GetEmptyTable()
+        {
+            string url = $"{RootUrl}/api/admin/table";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+
+            Assert.That(responseTask.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response)); 
+        }
+        
+        [Test]
+        public async Task GetEmptyDataset()
+        {
+            string url = $"{RootUrl}/api/admin/dataset";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+
+            Assert.That(responseTask.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response)); 
+        }
+        public async Task GetEmptySheet()
+        {
+            string url = $"{RootUrl}/api/admin/sheet";
+            Client.DefaultRequestHeaders.Add("Cookie",
+                CookieFromLogin);
+            var responseTask  = await Client.GetAsync(url);
+            var response = await responseTask.Content.ReadAsStringAsync();
+
+            Assert.That(responseTask.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response)); 
         }
         
     }
