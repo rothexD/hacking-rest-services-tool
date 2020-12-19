@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -8,19 +9,28 @@ using SqlMapAPIWrapperLib.Entity;
 
 namespace SqlMapAPIWrapperLib
 {
+    /// <summary>
+    /// Wrapper Class for most Important SqlMapApi commands
+    /// </summary>
     public class SqlMapApiWrapper 
     {
         
         private string _host;
         private int _port;
         private TimeSpan waitingTime = new TimeSpan(0, 0, 3);
+        public List<SqlmapVulnerbility> Vulnerbilities = null;
 
         public SqlMapApiWrapper(string sqlMapApiAddress, int port = 8775)
         {
             _host = sqlMapApiAddress;
             _port = port;
         }
-
+        /// <summary>
+        /// Check Which Database is in Use
+        /// </summary>
+        /// <param name="url">TargetUrl format: https://target.com/test?id=*</param>
+        /// <param name="sessionCookie">Can be set to null if not needed</param>
+        /// <returns>Returns Database class if is sql injectable otherwise null</returns>
         public async Task<Database> GetDatabaseType(string url, string sessionCookie)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
@@ -45,6 +55,7 @@ namespace SqlMapAPIWrapperLib
                         await CheckForStatus(manager, taskid);
 
                         var data = await manager.GetData(taskid);
+                        Vulnerbilities = CheckForVulnerability(data);
                         return CheckForGetDatabaseType(data);
                     }
                     catch (Exception e)
@@ -59,7 +70,11 @@ namespace SqlMapAPIWrapperLib
                 }
             }
         }
-
+        /// <summary>
+        /// Check Which Database is in Use
+        /// </summary>
+        /// <param name="postData">: Required Post Header with injectable target in Body</param>
+        /// <returns>Returns Database class if is sql injectable otherwise null</returns>
         public async Task<Database> GetDatabaseType(string postData)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
@@ -85,8 +100,8 @@ namespace SqlMapAPIWrapperLib
                             return null;
 
                         await CheckForStatus(manager, taskid);
-
                         var data = await manager.GetData(taskid);
+                        Vulnerbilities = CheckForVulnerability(data);
                         return CheckForGetDatabaseType(data);
 
                     }
@@ -104,16 +119,33 @@ namespace SqlMapAPIWrapperLib
             }
         }
 
+        /// <summary>
+        /// Wrapper function that only return whether is injectable
+        /// </summary>
+        /// <param name="url">target url e.g. https://target.com/site?id*</param>
+        /// <param name="sessionCookie">can be set to null if not needed</param>
+        /// <returns>a boolean whether its injectable or not</returns>
         public async Task<bool> IsSqlinjectable(string url, string sessionCookie)
         {
             return !string.IsNullOrWhiteSpace((await GetDatabaseType(url, sessionCookie))?.Name);
         }
 
+        /// <summary>
+        /// Wrapper function that only return whether is injectable
+        /// </summary>
+        /// <param name="postData">Required Post Header with injectable target in Body</param>
+        /// <returns>a boolean whether its injectable or not</returns>
         public async Task<bool> IsSqlinjectable(string postData)
         {
             return !string.IsNullOrWhiteSpace((await GetDatabaseType(postData))?.Name);
         }
 
+        /// <summary>
+        /// If the db is injectable return a List of strings containing the DB in the Database
+        /// </summary>
+        /// <param name="url">target url e.g. https://target.com/site?id*</param>
+        /// <param name="sessionCookie">can be set to null if not needed</param>
+        /// <returns>List of DB names in the Databse</returns>
         public async Task<List<string>> GetDatabases(string url, string sessionCookie)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
@@ -151,7 +183,11 @@ namespace SqlMapAPIWrapperLib
                 }
             }
         }
-
+        /// <summary>
+        /// If the db is injectable return a List of strings containing the DB in the Database
+        /// </summary>
+        /// <param name="postData">Required Post Header with injectable target in Body</param>
+        /// <returns>a boolean whether its injectable or not</returns>
         public async Task<List<string>> GetDatabases(string postData)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
@@ -196,6 +232,13 @@ namespace SqlMapAPIWrapperLib
             }
         }
 
+        /// <summary>
+        /// If DB is sql Injectable returns the tables in a given DB in a Databse
+        /// </summary>
+        /// <param name="url">target url e.g. https://target.com/site?id*</param>
+        /// <param name="sessionCookie">can be set to null if not needed</param>
+        /// <param name="db">Database from GetDatabases</param>
+        /// <returns>Retuns List of Tables in the DB in the Database</returns>
         public async Task<List<string>> GetDatabaseTables(string url, string sessionCookie, string db)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
@@ -235,6 +278,12 @@ namespace SqlMapAPIWrapperLib
             }
         }
 
+        /// <summary>
+        /// If DB is sql Injectable returns the tables in a given DB in a Databse
+        /// </summary>
+        /// <param name="postData">Required Post Header with injectable target in Body</param>
+        /// <param name="db">Database from GetDatabases</param>
+        /// <returns>Retuns List of Tables in the DB in the Database</returns>
         public async Task<List<string>> GetDatabaseTables(string postData, string db)
         {
             {
@@ -284,6 +333,14 @@ namespace SqlMapAPIWrapperLib
             }
         }
 
+        /// <summary>
+        /// Returns the content of the Table from the DB in the Databse if it is injectable
+        /// </summary>
+        /// <param name="url">target url e.g. https://target.com/site?id*</param>
+        /// <param name="sessionCookie">can be set to null if not needed</param>
+        /// <param name="db">Database from GetDatabases</param>
+        /// <param name="table">Tablename from GetDatabaseTables</param>
+        /// <returns></returns>
         public async Task<Dictionary<string, List<string>>> GetTableContentFromDatabase(string url, string sessionCookie,
             string table, string db)
         {
@@ -325,6 +382,13 @@ namespace SqlMapAPIWrapperLib
             }
         }
 
+        /// <summary>
+        /// Returns the content of the Table from the DB in the Databse if it is injectable
+        /// </summary>
+        /// <param name="postData">Required Post Header with injectable target in Body</param>
+        /// <param name="db">Database from GetDatabases</param>
+        /// <param name="table">Tablename from GetDatabaseTables</param>
+        /// <returns></returns>
         public async Task<Dictionary<string, List<string>>> GetTableContentFromDatabase(string postData, string table, string db)
         {
             {
@@ -373,7 +437,12 @@ namespace SqlMapAPIWrapperLib
                 }
             }
         }
-
+        /// <summary>
+        /// Gets Database User from Database
+        /// </summary>
+        /// <param name="url">target url e.g. https://target.com/site?id*</param>
+        /// <param name="sessionCookie">can be set to null if not needed</param>
+        /// <returns>Returns a dictionary of Username and Password</returns>
         public async Task<Dictionary<string, string>> GetDatabasePasswords(string url, string sessionCookie)
         {
             using (SqlmapSession session = new SqlmapSession(_host, _port))
@@ -411,7 +480,11 @@ namespace SqlMapAPIWrapperLib
                 }
             }
         }
-
+        /// <summary>
+        /// Gets Database User from Database
+        /// </summary>
+        /// <param name="postData">Required Post Header with injectable target in Body</param>
+        /// <returns>Returns a dictionary of Username and Password</returns>
         public async Task<Dictionary<string, string>> GetDatabasePasswords(string postData)
         {
             {
@@ -458,6 +531,12 @@ namespace SqlMapAPIWrapperLib
             }
         }
 
+        /// <summary>
+        /// Helper Function for creating a file 
+        /// </summary>
+        /// <param name="filename">Name of the file</param>
+        /// <param name="data">data to be written into the file</param>
+        /// <returns></returns>
         protected bool CreateFileFromData(string filename, string data)
         {
             try
@@ -475,7 +554,11 @@ namespace SqlMapAPIWrapperLib
             }
             return true;
         }
-
+        /// <summary>
+        /// Parses data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         protected Dictionary<string, string> CheckDataForGetDatabasePasswords(SqlmapData data)
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
@@ -503,7 +586,11 @@ namespace SqlMapAPIWrapperLib
             }
             return null;
         }
-
+        /// <summary>
+        /// Parses data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         protected Dictionary<string, List<string>> CheckDataForGetTableContentFromDatabase(SqlmapData data)
         {
             Dictionary<string, List<string>> ret = new Dictionary<string, List<string>>();
@@ -530,7 +617,11 @@ namespace SqlMapAPIWrapperLib
             }
             return null;
         }
-
+        /// <summary>
+        /// Parses data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         protected List<string> CheckDataForGetDatabaseTables(SqlmapData data,string db)
         {
             if (data != null && data.Data.Count > 2)
@@ -543,7 +634,11 @@ namespace SqlMapAPIWrapperLib
             }
             return null;
         }
-
+        /// <summary>
+        /// Parses data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         protected List<string> CheckForGetDatabases(SqlmapData data)
         {
             if (data != null && data.Data.Count > 2)
@@ -557,7 +652,50 @@ namespace SqlMapAPIWrapperLib
 
             return null;
         }
+        /// <summary>
+        /// Parses data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected List<SqlmapVulnerbility> CheckForVulnerability(SqlmapData data)
+        {
+            if (data != null && data.Data.Count > 2)
+            {
+                if (data.Data[1].JsonReturnType == JsonReturnType.Array && data.Data[1].Type == 1) //last index
+                {
+                    var valueArray = data.Data[1].Value as JArray;
+                    var value = valueArray?[0] as JObject;
+                    var dataDictionary = value?.GetValue("data")?.ToObject<Dictionary<string,object>>();
 
+                    if (dataDictionary == null)
+                        return null;
+
+                    List<SqlmapVulnerbility> list = new List<SqlmapVulnerbility>();
+                    foreach (var entry in dataDictionary)
+                    {
+                        var vul = new SqlmapVulnerbility();   
+                        vul.Title = ((JObject) entry.Value).GetValue("title")?.ToString();
+                        vul.Payload = ((JObject) entry.Value).GetValue("payload")?.ToString();
+
+                        if (string.IsNullOrWhiteSpace(vul.Title))
+                            continue;
+                        
+                        list.Add(vul);
+                    }
+
+                    if (list.Count > 0)
+                        return list;
+
+                }
+            }
+
+            return null;
+        }
+        /// <summary>
+        /// Parses data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         protected Database CheckForGetDatabaseType(SqlmapData data)
         {
             if (data != null && data.Data.Count > 2)
@@ -575,7 +713,12 @@ namespace SqlMapAPIWrapperLib
             }
             return null;
         }
-
+        /// <summary>
+        /// Checks if Task is finished 
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="taskid"></param>
+        /// <returns></returns>
         protected async Task CheckForStatus(SqlmapManager manager ,string taskid)
         {
             SqlmapStatus status = await manager.GetScanStatus(taskid);
