@@ -7,6 +7,7 @@ using Hacking_Rest_SqlInjetor.ServiceHandlers;
 using Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers;
 using Hacking_Rest_SqlInjetor.WebClient;
 using Hacking_REST_Services.Helpers;
+using Hacking_REST_Services.ServiceHandlers.AttackHandlers;
 
 namespace Hacking_Rest_SqlInjetor
 {
@@ -121,7 +122,7 @@ namespace Hacking_Rest_SqlInjetor
                         var openSite = client.Get(targeturi.AbsoluteUri);
                         var document = CustomHttpClient.GetHtmlDocument(openSite);
                         var formsOfHtmlDocument = FormDataParser.GetFormsOfHtmlDocument(document, targeturi.AbsoluteUri);
-                        var ListHttpContext = FormDataParser.BuildHttpContexts(formsOfHtmlDocument);
+                        var ListHttpContext = FormDataParser.BuildHttpContexts(formsOfHtmlDocument, targeturi.AbsoluteUri);
 
                         foreach (var item in ListHttpContext)
                         {
@@ -135,6 +136,9 @@ namespace Hacking_Rest_SqlInjetor
                                 serviceDirectory.RunTest("SQL-POST", item.GetRequestAsHttpString(client.ClientHandler.CookieContainer.GetCookieHeader(targeturi), null), client);
                             }
                         }
+                        break;
+                    case "5":
+                        new XSSby_xsssniper().StartAttack("http://localhost:55001/xss_stored_1.php", client);
                         break;
                     default:
                         break;

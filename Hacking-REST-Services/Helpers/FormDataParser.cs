@@ -7,12 +7,13 @@ using HtmlAgilityPack;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 
 namespace Hacking_REST_Services.Helpers
 {
     public class FormDataParser
     {
-        public static List<HttpContext> BuildHttpContexts(IList<FormData> data)
+        public static List<HttpContext> BuildHttpContexts(IList<FormData> data,string fromTarget)
         {
             List <HttpContext> listOfContextes = new List<HttpContext>();
             foreach(var item in data)
@@ -31,7 +32,15 @@ namespace Hacking_REST_Services.Helpers
                 }
                 try
                 {
-                    singleContext.RequestUri = new Uri(item.Action);
+                    if(Regex.IsMatch(item.Action, @"^http://.*")){
+                        singleContext.RequestUri = new Uri(item.Action);
+                    }
+                    else
+                    {
+                        string temp = Regex.Match(fromTarget, "^(http://.*)/").Groups[1].Value;
+                        temp += item.Action;
+                        singleContext.RequestUri = new Uri(temp);
+                    }                  
                 }
                 catch
                 {
@@ -39,7 +48,20 @@ namespace Hacking_REST_Services.Helpers
                 }
                 foreach (var Inputs in item.InputFields)
                 {
-                    singleContext.AddField(Inputs.Name, Inputs.Value);
+                    if(Inputs.Type != null){
+                        if (Inputs.Type.ToLower() == "date")
+                        {
+                            singleContext.AddField(Inputs.Name, Inputs.Value ?? "22.10.2020");
+                        }
+                        else
+                        {
+                            singleContext.AddField(Inputs.Name, Inputs.Value ?? "test");
+                        }
+                    }                  
+                    else
+                    {
+                        singleContext.AddField(Inputs.Name,Inputs.Value ?? "test");
+                    }                  
                 }
                 foreach (var Selects in item.SelectFields)
                 {
@@ -52,6 +74,7 @@ namespace Hacking_REST_Services.Helpers
 
                     }
                 }
+                listOfContextes.Add(singleContext);
             }
             return listOfContextes;
         }

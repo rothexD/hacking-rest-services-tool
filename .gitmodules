@@ -1,3 +1,6 @@
 [submodule "SqlMapAPIWrapper/vendor/sqlmap"]
 	path = SqlMapAPIWrapper/vendor/sqlmap
 	url = https://github.com/sqlmapproject/sqlmap.git
+[submodule "XSStrike"]
+	path = XSStrike
+	url = https://github.com/s0md3v/XSStrike
