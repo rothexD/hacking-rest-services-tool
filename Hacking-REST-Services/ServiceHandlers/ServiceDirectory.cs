@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.WebClient;
 
 namespace Hacking_REST_Services.ServiceHandlers
 {

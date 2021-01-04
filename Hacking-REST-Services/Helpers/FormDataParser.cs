@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Hacking_Rest_SqlInjetor.Form;
-using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Form;
+using Hacking_REST_Services.WebClient;
 using HtmlAgilityPack;
 using System.Linq;
 using System.Net.Http;

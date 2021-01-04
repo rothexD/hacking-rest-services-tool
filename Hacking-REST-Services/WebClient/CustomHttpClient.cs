@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Net;
 
-namespace Hacking_Rest_SqlInjetor.WebClient
+namespace Hacking_REST_Services.WebClient
 {
     public class CustomHttpClient : ICustomHttpClient
     {

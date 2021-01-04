@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Hacking_Rest_SqlInjetor.WebClient
+namespace Hacking_REST_Services.WebClient
 {
     public interface ICustomHttpClient
     {

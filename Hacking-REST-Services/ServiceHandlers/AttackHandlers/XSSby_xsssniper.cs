@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using Hacking_Rest_SqlInjetor.Form;
-using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Form;
+using Hacking_REST_Services.WebClient;
 using Hacking_REST_Services.Helpers;
-using Hacking_Rest_SqlInjetor.ServiceHandlers;
+using Hacking_REST_Services.ServiceHandlers;
 using System.Diagnostics;
 using System.IO;
 

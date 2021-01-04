@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Hacking_Rest_SqlInjetor.Form;
+using Hacking_REST_Services.Form;
 
-namespace Hacking_Rest_SqlInjetor.DatabaseInformations
+namespace Hacking_REST_Services.DatabaseInformations
 {
     public interface IDatabaseInformation
     {

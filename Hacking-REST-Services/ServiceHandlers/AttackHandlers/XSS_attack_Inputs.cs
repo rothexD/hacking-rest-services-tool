@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using Hacking_Rest_SqlInjetor.Form;
-using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Form;
+using Hacking_REST_Services.WebClient;
 using Hacking_REST_Services.Helpers;
 
-namespace Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers
+namespace Hacking_REST_Services.ServiceHandlers.AttackHandlers
 {
     internal class XSS_Attack_Inputs : AbstractXSShelper
     {

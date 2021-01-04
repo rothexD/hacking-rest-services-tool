@@ -1,4 +1,4 @@
-﻿namespace Hacking_Rest_SqlInjetor
+﻿namespace Hacking_REST_Services
 {
     public interface IDatabaseQueryGenerator {}
 }

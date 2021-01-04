@@ -1,4 +1,4 @@
-namespace Hacking_Rest_SqlInjetor.Form
+namespace Hacking_REST_Services.Form
 {
     public class InputInformation
     {

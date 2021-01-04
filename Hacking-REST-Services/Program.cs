@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Hacking_REST_Services.ServiceHandlers;
-using Hacking_Rest_SqlInjetor.ServiceHandlers;
-using Hacking_Rest_SqlInjetor.ServiceHandlers.AttackHandlers;
-using Hacking_Rest_SqlInjetor.WebClient;
-using Hacking_REST_Services.Helpers;
 using Hacking_REST_Services.ServiceHandlers.AttackHandlers;
+using Hacking_REST_Services.WebClient;
+using Hacking_REST_Services.Helpers;
 
-namespace Hacking_Rest_SqlInjetor
+namespace Hacking_REST_Services
 {
     internal static class Program
     {

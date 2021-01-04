@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Hacking_Rest_SqlInjetor.Form
+namespace Hacking_REST_Services.Form
 {
     public class SelectInformation
     {

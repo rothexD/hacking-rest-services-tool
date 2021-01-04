@@ -1,4 +1,4 @@
-﻿namespace Hacking_Rest_SqlInjetor.ORACLE
+﻿namespace Hacking_REST_Services.ORACLE
 {
     class OracleQueryGenerator : IDatabaseQueryGenerator
     {
