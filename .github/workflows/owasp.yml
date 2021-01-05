@@ -1,0 +1,46 @@
+name: OWASP-ZAP
+
+on:
+  push:
+    branches: [ dev-singh ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  zap:
+  
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: scw1_user_dyn
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: scw
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: ./owaspAutomation/src/Backend
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ScwSvc
+    - name: Server
+      working-directory: ./owaspAutomation/src/Backend/ScwSvc
+      run: dotnet run --launch-profile ScwSvc &
+    - name: OWASP ZAP Full Scan
+      uses: zaproxy/action-full-scan@v0.2.0
+      with:
+        target: 'https://localhost:5001'
