@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SpreadSheetTest.Entities
 {
@@ -7,6 +8,8 @@ namespace SpreadSheetTest.Entities
         /// <summary>
         /// An optional display name.
         /// </summary>
+        [Required]
+        [StringLength(20)]
         public string DisplayName { get; set; }
     }
 }

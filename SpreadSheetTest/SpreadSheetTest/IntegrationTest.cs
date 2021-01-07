@@ -26,6 +26,7 @@ namespace SpreadSheetTest
         public SqlMapApiWrapper Wrapper;
         public NpgsqlConnection Connection;
         public string UserId;
+        public string schema;
         
         public List<TableRef> TableRefList = new List<TableRef>();
         
@@ -34,7 +35,10 @@ namespace SpreadSheetTest
         {
             RootUrl = "http://127.0.0.1";
             Wrapper = new SqlMapApiWrapper("127.0.0.1",8775);
-            Connection = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=scw");
+            string dbUser = "scw";
+            string dbPassword = "scw";
+            Connection = new NpgsqlConnection($"Host=localhost;Username={dbUser};Password={dbPassword};Database=scw");
+            schema = "scw1_sys";
             await DeleteTableContent();
         }
         
@@ -54,7 +58,7 @@ namespace SpreadSheetTest
             {
                 foreach (var table in tableNames)
                 {
-                    var sql2 = $"DELETE FROM \"{table}\"";
+                    var sql2 = $"DELETE FROM \"{schema}\".\"{table}\"";
                     var cmd2 = new NpgsqlCommand(sql2,Connection);
                     await cmd2.ExecuteNonQueryAsync();
                 }
@@ -80,7 +84,7 @@ namespace SpreadSheetTest
             List<string> tableNames = new List<string>();
             try
             {
-                var sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'";
+                var sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'scw1_sys'";
                 var cmd = new NpgsqlCommand(sql, Connection);
                 var response = await cmd.ExecuteReaderAsync();
 
@@ -101,6 +105,26 @@ namespace SpreadSheetTest
             }
 
             return tableNames;
+        }
+        
+        public async Task SetTestUserToAdmin()
+        {
+            await Connection.OpenAsync();
+            try
+            {
+                var sql = $"UPDATE \"{schema}\".\"Users\" set \"Role\"= 2 where \"Name\"='test'";
+                var cmd = new NpgsqlCommand(sql,Connection);
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                await Connection.CloseAsync();
+            }
         }
         
         [Test , Order(1)]
@@ -383,25 +407,7 @@ namespace SpreadSheetTest
             var isSqlinjectable = await Wrapper.IsSqlinjectable(data);
             Assert.That(!isSqlinjectable);
         }
-        public async Task SetTestUserToAdmin()
-        {
-            await Connection.OpenAsync();
-            try
-            {
-                    var sql = "UPDATE \"Users\" set \"Role\"= 2 where \"Name\"='test'";
-                    var cmd = new NpgsqlCommand(sql,Connection);
-                    await cmd.ExecuteNonQueryAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            finally
-            {
-                await Connection.CloseAsync();
-            }
-        }
+      
         [Test, Order(18)]
         public async Task GetUserList()
         {
