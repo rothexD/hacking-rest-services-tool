@@ -1,4 +1,4 @@
-﻿namespace Hacking_Rest_SqlInjetor.DatabaseInformations
+﻿namespace Hacking_REST_Services.DatabaseInformations
 {
     public enum DatabaseInformationEnumeration
     {

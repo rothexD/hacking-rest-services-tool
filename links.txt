@@ -1,0 +1,13 @@
+https://github.com/s0md3v/XSStrike
+https://github.com/payloadbox/xss-payload-list
+https://owasp.org/www-community/attacks/xss/
+https://github.com/gwen001/testxss
+https://github.com/secf00tprint/payloadtester_xss
+https://github.com/Ak-wa/XSSRecon
+https://github.com/shadsidd/Automated-XSS-Finder
+https://github.com/secdec/xssmap
+https://github.com/pikpikcu/XRCross
+https://github.com/turkogluc/xssGo
+https://github.com/stamparm/DSXS
+https://github.com/lwzSoviet/NoXss
+https://github.com/faizann24/XssPy

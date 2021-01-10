@@ -25,7 +25,7 @@ Sec-Fetch-Dest: document
 Referer: http://localhost/sqli_6.php
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
-Cookie: security_level=0; PHPSESSID=5pdj4a7fk5vj1amju59piiht51
+Cookie: security_level=0; PHPSESSID=gj4a6vjrbpqc3imapg492b7el0
 Connection: close
 
 title=test&action=search";
@@ -73,7 +73,7 @@ Connection: close
 
 
             SqlMapApiWrapper wrapper = new SqlMapApiWrapper("127.0.0.1", 8775);
-            bool inject =await  wrapper.IsSqlinjectable(dataNotWorking);
+            bool inject =await  wrapper.IsSqlinjectable("localhost/sqli_1.php?title=test","security_level=0; PHPSESSID=gj4a6vjrbpqc3imapg492b7el0");
             /*
 string targetUrl = "http://localhost/sqli_1.php?title=test";
 string targetUrlNotWorking = "http://localhost/sqli_1.php";

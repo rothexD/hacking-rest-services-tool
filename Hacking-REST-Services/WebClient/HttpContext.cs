@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace Hacking_Rest_SqlInjetor.WebClient
+namespace Hacking_REST_Services.WebClient
 {
     public class HttpContext : AbstractHttpContext
     {
@@ -13,12 +13,12 @@ namespace Hacking_Rest_SqlInjetor.WebClient
         {
             Fields = new Dictionary<string, string>();
         }
-        
+
         public HttpContext(HttpMethod method, string uri) : base(method, uri)
         {
             Fields = new Dictionary<string, string>();
         }
-        
+
         public HttpContext(HttpMethod method, string uri, Dictionary<string, string> fields) : base(method, uri)
         {
             Fields = fields;
@@ -52,6 +52,28 @@ namespace Hacking_Rest_SqlInjetor.WebClient
 
             Content = new FormUrlEncodedContent(Fields);
             return this;
+        }
+
+        public string GetRequestAsHttpString(string cookie,string[] Headers)
+        {
+            string returnval = $"{Method} {RequestUri} HTTP/1.1\r\n";
+            if (Headers != null)
+            {
+                foreach (string item in Headers)
+                {
+                    returnval += item;
+                    returnval += "\r\n";
+                }
+            }
+            
+            if(cookie != null)
+            {
+               returnval += $"Cookie: {cookie}\r\n";
+            }
+            returnval += "\r\n";
+            returnval += this.Content.ReadAsStringAsync().Result;
+
+            return returnval;
         }
     }
 }

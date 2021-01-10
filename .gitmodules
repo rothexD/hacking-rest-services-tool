@@ -6,3 +6,6 @@
 	path = SpreadSheetTest/vendor/scw
 	url = https://github.com/nicll/scw.git
 	ignore = all
+[submodule "XSStrike"]
+	path = XSStrike
+	url = https://github.com/s0md3v/XSStrike

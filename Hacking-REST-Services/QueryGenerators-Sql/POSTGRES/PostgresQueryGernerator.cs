@@ -1,4 +1,4 @@
-﻿namespace Hacking_Rest_SqlInjetor.POSTGRES
+﻿namespace Hacking_REST_Services.POSTGRES
 {
     class PostgresQueryGernerator : IDatabaseQueryGenerator
     {

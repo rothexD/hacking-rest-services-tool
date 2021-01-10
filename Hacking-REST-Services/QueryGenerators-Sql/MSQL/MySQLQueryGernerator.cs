@@ -1,4 +1,4 @@
-﻿namespace Hacking_Rest_SqlInjetor.MSQL
+﻿namespace Hacking_REST_Services.MSQL
 {
     class MySQL_query_gernerator : IDatabaseQueryGenerator
     {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using Hacking_Rest_SqlInjetor.Form;
-using Hacking_Rest_SqlInjetor.WebClient;
+using Hacking_REST_Services.Form;
+using Hacking_REST_Services.WebClient;
 using System.Net;
 
 namespace Hacking_REST_Services.Helpers

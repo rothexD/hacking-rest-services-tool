@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 
-namespace Hacking_Rest_SqlInjetor.WebClient
+namespace Hacking_REST_Services.WebClient
 {
     public abstract class AbstractHttpContext : HttpRequestMessage
     {
