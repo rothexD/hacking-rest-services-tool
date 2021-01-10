@@ -47,6 +47,6 @@ jobs:
       run: |
         git submodule update --init --recursive --remote
     - name: Install dependencies
-      run: dotnet restore ./SpreadSheetTest/SpreadSheetTest.sln
+      run: dotnet restore SpreadSheetTest/SpreadSheetTest.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal ./SpreadSheetTest/SpreadSheetTest.sln
+      run: dotnet test --no-build --verbosity normal SpreadSheetTest/SpreadSheetTest.sln
