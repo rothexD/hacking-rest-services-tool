@@ -35,7 +35,7 @@ jobs:
     - name: Clean
       run: dotnet clean ./SpreadSheetTest/SpreadSheetTest.sln --configuration Release && dotnet nuget locals all --clear
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./SpreadSheetTest/vendor/scw/src/Backend/SpreadsheetComponents.sln
     - name: Build
       run: dotnet build --no-restore
     - name: Test
