@@ -50,3 +50,6 @@ jobs:
       run: dotnet restore SpreadSheetTest/SpreadSheetTest.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal SpreadSheetTest/SpreadSheetTest.sln
+    - name: test2
+      run: | 
+        ls -a SpreadSheetTest/SpreadSheetTest/bin/Debug/netcoreapp5.0/
