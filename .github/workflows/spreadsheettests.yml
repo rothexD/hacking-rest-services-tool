@@ -46,11 +46,5 @@ jobs:
     - name: checkout submodule
       run: |
         git submodule update --init --recursive --remote
-    - name: Clean
-      run: dotnet clean ./SpreadSheetTest/SpreadSheetTest.sln --configuration Release && dotnet nuget locals all --clear
-    - name: Restore dependencies
-      run: dotnet restore ./SpreadSheetTest/vendor/scw/src/Backend/SpreadsheetComponents.sln
-    - name: Build
-      run: dotnet build --no-restore ./SpreadSheetTest/vendor/scw/src/Backend/SpreadsheetComponents.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal ./SpreadSheetTest/SpreadSheetTest.sln
