@@ -13,6 +13,8 @@ jobs:
     services:
      postgres:
       image: postgres:12
+      ports: 
+       - 5432:5432
       env:
         POSTGRES_USER: scw
         POSTGRES_PASSWORD: scw
@@ -22,6 +24,10 @@ jobs:
         --health-interval 10s
         --health-timeout 5s
         --health-retries 5
+     scw:
+       image: if20b194/scw:latest
+       ports:
+         - 80:80
 
     steps:
     - uses: actions/checkout@v2
