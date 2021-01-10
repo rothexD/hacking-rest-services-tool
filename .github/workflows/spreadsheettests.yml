@@ -28,6 +28,14 @@ jobs:
        image: if20b194/scw:latest
        ports:
          - 80:80
+       env:
+         SCW1_DBSERVER: postgres
+         SCW1_DBPORT: 5432
+         SCW1_DBUSER_SYS: scw
+         SCW1_DBPASS_SYS: scw
+         SCW1_DBUSER_DYN: scw
+         SCW1_DBPASS_DYN: scw
+         SCW1_PGREST_BASEURL: postgres:3000
 
     steps:
     - uses: actions/checkout@v2
