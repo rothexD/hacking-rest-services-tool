@@ -54,7 +54,7 @@ jobs:
        python-version: 2.7 #install the python needed
     - name: execute py script # run the run.py to get the latest data
       run: |
-       python SqlMapAPIWrapper/vendor/sqlmap/sqlmapapi.py --server
+       python SqlMapAPIWrapper/vendor/sqlmap/sqlmapapi.py --server &
     - name: Build
       run: dotnet build --configuration Debug --no-restore SpreadSheetTest/SpreadSheetTest.sln
     - name: Test
