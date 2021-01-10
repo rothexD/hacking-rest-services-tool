@@ -46,5 +46,9 @@ jobs:
     - name: checkout submodule
       run: |
         git submodule update --init --recursive --remote
+    - name: Install dependencies
+      run: dotnet restore ./SpreadSheetTest/SpreadSheetTest.sln
+    - name: Build
+      run: dotnet build --configuration Release --no-restore ./SpreadSheetTest/SpreadSheetTest.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal ./SpreadSheetTest/SpreadSheetTest.sln
