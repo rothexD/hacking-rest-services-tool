@@ -1,6 +1,11 @@
 [submodule "SqlMapAPIWrapper/vendor/sqlmap"]
 	path = SqlMapAPIWrapper/vendor/sqlmap
 	url = https://github.com/sqlmapproject/sqlmap.git
+	ignore = all
+[submodule "SpreadSheetTest/vendor/scw"]
+	path = SpreadSheetTest/vendor/scw
+	url = https://github.com/nicll/scw.git
+	ignore = all
 [submodule "XSStrike"]
 	path = XSStrike
 	url = https://github.com/s0md3v/XSStrike

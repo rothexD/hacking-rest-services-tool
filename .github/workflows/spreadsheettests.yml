@@ -1,0 +1,62 @@
+name: .NET
+
+on:
+  push:
+    branches: [ SpreadSheetTestsActions ]
+  pull_request:
+    branches: [ SpreadSheetTestsActions ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    services:
+     postgres:
+      image: postgres:12
+      ports: 
+       - 5432:5432
+      env:
+        POSTGRES_USER: scw
+        POSTGRES_PASSWORD: scw
+        POSTGRES_DB: scw
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
+     scw:
+       image: if20b194/scw:latest
+       ports:
+         - 80:80
+       env:
+         SCW1_DBSERVER: postgres
+         SCW1_DBPORT: 5432
+         SCW1_DBUSER_SYS: scw
+         SCW1_DBPASS_SYS: scw
+         SCW1_DBUSER_DYN: scw
+         SCW1_DBPASS_DYN: scw
+         SCW1_PGREST_BASEURL: postgres:3000
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.101
+    - name: checkout submodule
+      run: |
+        git submodule update --init --recursive --remote
+    - name: Install dependencies
+      run: dotnet restore SpreadSheetTest/SpreadSheetTest.sln
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+       python-version: 2.7 #install the python needed
+    - name: execute py script # run the run.py to get the latest data
+      run: |
+       python SqlMapAPIWrapper/vendor/sqlmap/sqlmapapi.py --server &
+    - name: Build
+      run: dotnet build --configuration Debug --no-restore SpreadSheetTest/SpreadSheetTest.sln
+    - name: Test
+      run: dotnet test --no-build --verbosity normal SpreadSheetTest/SpreadSheetTest.sln
+   
