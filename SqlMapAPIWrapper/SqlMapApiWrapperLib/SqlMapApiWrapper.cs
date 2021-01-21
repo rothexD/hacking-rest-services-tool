@@ -11,6 +11,7 @@ namespace SqlMapAPIWrapperLib
 {
     /// <summary>
     /// Wrapper Class for most Important SqlMapApi commands
+    /// needed a started SqlmapAPI Server 
     /// </summary>
     public class SqlMapApiWrapper 
     {
@@ -20,6 +21,11 @@ namespace SqlMapAPIWrapperLib
         private TimeSpan waitingTime = new TimeSpan(0, 0, 3);
         public List<SqlmapVulnerbility> Vulnerbilities = null;
 
+        /// <summary>
+        /// Enter the SqlMapApi server
+        /// </summary>
+        /// <param name="sqlMapApiAddress">address of the sqlmapapi server</param>
+        /// <param name="port">port for the sqlmapapi server</param>
         public SqlMapApiWrapper(string sqlMapApiAddress, int port = 8775)
         {
             _host = sqlMapApiAddress;

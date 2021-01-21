@@ -114,6 +114,7 @@ namespace SqlMapAPIWrapperLib
 
         /// <summary>
         /// Parses Results into SqlmapData
+        /// Data still needs to be parsed to be outputed correctly 
         /// </summary>
         /// <param name="taskid">TaskID from NewTask</param>
         /// <returns>SqlMapData might need further parsing</returns>
