@@ -1,0 +1,41 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:50874",
+      "sslPort": 44395
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchUrl": "api/service/myroles",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "ScwSvc": {
+      "commandName": "Project",
+      "launchUrl": "api/service/myroles",
+      "environmentVariables": {
+        "SCW1_DBPORT": "5432",
+        "SCW1_DBPASS_SYS": "1234",
+        "SCW1_DBSERVER": "127.0.0.1",
+        "SCW1_DBPASS_DYN": "1234",
+        "SCW1_DBUSER_DYN": "scw1_user_dyn",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SCW1_DBUSER_SYS": "scw1_user_dyn"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/students",
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  }
+}
