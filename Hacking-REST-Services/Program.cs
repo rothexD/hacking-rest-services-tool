@@ -68,7 +68,8 @@ namespace Hacking_REST_Services
                                       " + 1 = Clear Cookies\n" +
                                       " + 2 = XSS-INPUT\n" +
                                       " + 3 = XSS-INPUT\n" +
-                                      " + 4 = SQLINJECT\n");
+                                      " + 4 = SQLINJECT\n" +
+                                      " + 5 = XSS-byXsstrike\n");
 
                 input = Console.ReadLine();
                 input = input.Trim();
@@ -136,7 +137,9 @@ namespace Hacking_REST_Services
                         }
                         break;
                     case "5":
-                        new XSSby_xsssniper().StartAttack("http://localhost:55001/xss_stored_1.php", client);
+                        Console.WriteLine("Enter the targetUri");
+                        string attackXSSinput = Console.ReadLine();
+                        new XSSby_xsssniper().StartAttack(attackXSSinput, client);
                         break;
                     default:
                         break;
