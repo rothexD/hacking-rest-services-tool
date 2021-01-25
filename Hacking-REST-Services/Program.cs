@@ -66,8 +66,8 @@ namespace Hacking_REST_Services
                 Console.WriteLine("Please specify a mode\n" +
                                       " + 0 = Login\n" +
                                       " + 1 = Clear Cookies\n" +
-                                      " + 2 = XSS-INPUT\n" +
-                                      " + 3 = XSS-INPUT\n" +
+                                      " + 2 = XSS-input\n" +
+                                      " + 3 = XSS-Selects\n" +
                                       " + 4 = SQLINJECT\n" +
                                       " + 5 = XSS-byXsstrike\n");
 
